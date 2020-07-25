@@ -5,7 +5,6 @@ import os
 import configparser
 import ctypes
 os.chdir(os.path.dirname(__file__))
-#cogs = ["cogs.twitterCog", "cogs.twitchCog", "cogs.botowner", "cogs.gspreadCog", "cogs.tw", "cogs.twitchCog"]
 
 cogs = ["first"]
 TOKEN = "NzM2NDM4NjY5NTUxOTkyOTM2.Xxuz9Q.bqK2zosQXpEewxrvlwWOrgTFl8k"
