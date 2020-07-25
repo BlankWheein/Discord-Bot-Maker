@@ -1,0 +1,97 @@
+{
+   "commandname":{
+      "actions":[
+         {
+            "getArgument":{
+               "index":0,
+               "type":"int",
+               "var":"arg1"
+            }
+         },
+         {
+            "getRole":{
+               "id":"{arg1}",
+               "var":"member",
+               "name":"somename"
+            }
+         },
+         {
+            "getMember":{
+               "id":"{arg1}",
+               "var":"member",
+               "name":"somename"
+            }
+         },
+         {
+            "getGuild":{
+               "id":"{arg1}",
+               "var":"member",
+               "name":"somename"
+            }
+         },
+         {"purge": {
+                "limit": null,
+                "var": "deleted"
+            }},
+         {
+            "getChannel":{
+               "id":"{arg1}",
+               "var":"member",
+               "name":"somename"
+            }
+         },
+         {
+            "getMember":{
+               "id":"{arg1} (the id of the member)",
+               "var":"member",
+               "name":"somename"
+            }
+         },
+         {
+            "sendMessage":{
+               "message":"The message to send {stuff}",
+               "channel":"ctx.channel or ctx.author or var",
+               "target":"arg1 (The variable name of the channel)",
+               "var":"saves the message as a variable",
+               "delete_after": 10
+            }
+         },
+         {
+            "setVar":{
+               "content":"some variable",
+               "type":"some type",
+               "var":"what to save it as"
+            }
+         },
+         {
+            "ifStatement":{
+               "var1":"before operator",
+               "var2":"after operator",
+               "operator":"the operator",
+               "true":[
+                  "List of actions if its true"
+               ],
+               "false":[
+                  "List of actions if its False"
+               ]
+            }
+         },
+         {
+            "forLoop":{
+               "stop": 5,
+               "actions":[
+                  {
+                     "sendMessage":{
+                        "channel":"ctx.channel",
+                        "message":"this is the message {var}",
+                        "var":"message"
+                     }
+                  },
+                  {"withTyping": {
+                "actions": []}}
+               ]
+            }
+         }
+      ]
+   }
+}

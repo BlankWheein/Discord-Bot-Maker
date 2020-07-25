@@ -50,6 +50,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+.idea/
 
 # Translations
 *.mo
@@ -93,6 +94,7 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
+__pycache__
 
 # Celery stuff
 celerybeat-schedule
@@ -127,3 +129,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.idea/Discord-Bot-Maker.iml
+*.iml
+.idea/Discord-Bot-Maker.iml
