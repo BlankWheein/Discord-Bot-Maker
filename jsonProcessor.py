@@ -73,7 +73,8 @@ class cake:
             "unpin_message": self.unpin_message,  # Same as Pin just unpin
             'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
             "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
-            'raise_exception': self.raise_exception  # Raises an exception (Useful with the try_catch action)
+            'raise_exception': self.raise_exception,  # Raises an exception (Useful with the try_catch action)
+            'add_roles': self.add_roles
         }
         self.type_functions = {
             'int': int,
@@ -95,6 +96,28 @@ class cake:
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def add_roles(self, action):
+        if type(action["target"]) is str:
+            target = await self.get_variable(action, "target")
+            if type(target) is int:
+                target = self.guild.get_member(target)
+        else:
+            target = self.guild.get_member(action["target"])
+        if action["target"] == "author":
+            target = self.message.author
+        if type(action["roles"]) is str:
+            roles = await self.get_variable(action, "roles")
+            if type(roles) is int:
+                roles = self.guild.get_role(roles)
+        else:
+            roles = self.guild.get_role(action["roles"])
+        await target.add_roles(roles, reason=action["reason"])
+
+    
+
+
+
 
     async def raise_exception(self, action):
         raise self.exceptions[action["exception"]]
