@@ -75,7 +75,8 @@ class cake:
             "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
             'raise_exception': self.raise_exception,  # Raises an exception (Useful with the try_catch action)
             'add_roles': self.add_roles,  # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
-            'remove_roles': self.remove_roles  # Same as add_roles just removes instead
+            'remove_roles': self.remove_roles,  # Same as add_roles just removes instead
+            'set_category': self.set_category  # Sets a category as the main category
         }
         self.type_functions = {
             'int': int,
@@ -92,11 +93,19 @@ class cake:
             '>=': lambda a, b: a >= b,
             '<=': lambda a, b: a <= b
         }
-
         self.exceptions = {
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def set_category(self, action):
+        for channel in self.guild.channels:
+            if type(channel) is discord.CategoryChannel:
+                if channel.id == await self.get_variable(action, "id"):
+                    self.category = channel
+                    if "var" in action:
+                        self.commandsVar[action["var"]] = channel
+
 
     async def add_roles(self, action):
         if type(action["target"]) is str:
