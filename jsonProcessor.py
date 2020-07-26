@@ -72,7 +72,8 @@ class cake:
             "pin_message": self.pin_message,  # Pins a message from a variable or a message from id in the current channel
             "unpin_message": self.unpin_message,  # Same as Pin just unpin
             'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
-            "check_for_key_perms": self.check_for_key_perms  # Checks for specified perms if they have them go in true else go in false Supports or and and
+            "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
+            'raise_exception': self.raise_exception
         }
         self.type_functions = {
             'int': int,
@@ -94,6 +95,9 @@ class cake:
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def raise_exception(self, action):
+        raise self.exceptions[action["exception"]]
 
     async def check_for_key_perms(self, action):
         """ Checks if they have perms for a certain action Supports 'or' and 'and' """
