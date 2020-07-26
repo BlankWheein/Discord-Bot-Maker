@@ -111,13 +111,32 @@
          }
         ]
     },
-    "on_ready": {
+
+"on_ready": {
+"actions": [
+    {"try_catch": {
+        "actions": [
+            {"sendMessage": {
+                "message": "Will i work?",
+                "channel": "channel"
+            }}
+        ],
+        "exception": "Exception",
+        "error": [
+            {"print": {
+                "message": "{error}"
+            }}
+        ]
+    }}
+]
+},
+    "on_ready1": {
         "actions": [
             {"print": {
                 "message": "I am now ready {client.user.id}"
             }},
             {"setChannel": {
-                "id": 736648548380049541,
+                "id": 736745607150174288,
                 "print": "The channel {channel.name} has been set as default at {time}"
             }},
             {"withTyping": {
@@ -147,6 +166,38 @@
         "actions": [
             {"print": {
                 "message": "I have deleted this message id {message.id}"
+            }}
+        ]
+    },
+    "on_ready2": {
+        "actions": [
+            {"create_list": {
+                "var": "testlist"
+            }},
+            {"forLoop":  {
+                "var": ["123", "cake2", "TuckFaaha"],
+                "actions": [
+                    {"append_to_list": {
+                "value": "{var}",
+                "target": "testlist"
+            }}
+                ]
+
+            }},
+            {"print": {
+                "message": "{testlist}"
+            }},
+            {"pop_from_list": {
+                "target": "testlist",
+                "var": "tuck",
+                "index": 2
+            }},
+            {"setChannel": {
+                "id": 736745607150174288
+            }},
+            {"sendMessage": {
+                "message": "{tuck}",
+                "channel": "channel"
             }}
         ]
     }
