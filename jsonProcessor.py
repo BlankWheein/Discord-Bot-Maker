@@ -63,11 +63,14 @@ class cake:
             'purge': self.purge,  # Deletes x amount of messages in a channel
             'withTyping': self.withTyping,
             # Returns a context manager that allows you to type for an indefinite period of time.
-            'wait': self.wait,  # Waits x amount of seconds,
+            'wait': self.wait,  # Waits x amount of seconds
             'append_to_list': self.append_to_list,  # Appends a value to a list
             'create_list': self.create_list,  # Creates a list and stores it in self.commandsVar
-            'pop_from_list': self.pop_from_list,  # Pops from a list and saves it as a variable,
-            'try_catch': self.try_catch  # List of actions inside a try/except
+            'pop_from_list': self.pop_from_list,  # Pops from a list and saves it as a variable
+            'try_catch': self.try_catch,  # List of actions inside a try/except
+            'wait_for': "",
+            "pin_message": self.pin_message,
+            "unpin_message": self.unpin_message
         }
         self.type_functions = {
             'int': int,
@@ -89,6 +92,16 @@ class cake:
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def pin_message(self, action):
+        if type(action["message"]) == str:
+            msg = self.get_variable(action, "message")
+            await msg.pin()
+        else:
+            pass
+    async def unpin_message(self, action):
+        pass
+
 
     async def wait(self, action):
         await asyncio.sleep(action["delay"])
