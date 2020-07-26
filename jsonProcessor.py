@@ -114,7 +114,22 @@ class cake:
             roles = self.guild.get_role(action["roles"])
         await target.add_roles(roles, reason=action["reason"])
 
-    
+    async def remove_roles(self, action):
+        if type(action["target"]) is str:
+            target = await self.get_variable(action, "target")
+            if type(target) is int:
+                target = self.guild.get_member(target)
+        else:
+            target = self.guild.get_member(action["target"])
+        if action["target"] == "author":
+            target = self.message.author
+        if type(action["roles"]) is str:
+            roles = await self.get_variable(action, "roles")
+            if type(roles) is int:
+                roles = self.guild.get_role(roles)
+        else:
+            roles = self.guild.get_role(action["roles"])
+        await target.remove_roles(roles, reason=action["reason"])
 
 
 
