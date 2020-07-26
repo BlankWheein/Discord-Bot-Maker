@@ -70,7 +70,8 @@ class cake:
             'try_catch': self.try_catch,  # List of actions inside a try/except
             'wait_for': "",
             "pin_message": self.pin_message,
-            "unpin_message": self.unpin_message
+            "unpin_message": self.unpin_message,
+            'set_message': self.set_message
         }
         self.type_functions = {
             'int': int,
@@ -92,6 +93,14 @@ class cake:
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def set_message(self, action):
+        id = await self.get_variable(action, "id")
+        msg = await self.channel.fetch_message(id)
+        if "var" in action:
+            self.commandsVar[action["var"]] = msg
+        else:
+            self.commandsVar["msg"] = msg
 
     async def pin_message(self, action):
         if type(action["message"]) == str:
