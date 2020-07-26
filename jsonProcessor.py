@@ -74,7 +74,8 @@ class cake:
             'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
             "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
             'raise_exception': self.raise_exception,  # Raises an exception (Useful with the try_catch action)
-            'add_roles': self.add_roles
+            'add_roles': self.add_roles,  # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
+            'remove_roles': self.remove_roles  # Same as add_roles just removes instead
         }
         self.type_functions = {
             'int': int,
@@ -130,9 +131,6 @@ class cake:
         else:
             roles = self.guild.get_role(action["roles"])
         await target.remove_roles(roles, reason=action["reason"])
-
-
-
 
     async def raise_exception(self, action):
         raise self.exceptions[action["exception"]]
