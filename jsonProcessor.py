@@ -69,9 +69,10 @@ class cake:
             'pop_from_list': self.pop_from_list,  # Pops from a list and saves it as a variable
             'try_catch': self.try_catch,  # List of actions inside a try/except
             'wait_for': "",
-            "pin_message": self.pin_message,
-            "unpin_message": self.unpin_message,
-            'get_message': self.get_message
+            "pin_message": self.pin_message,  # Pins a message from a variable or a message from id in the current channel
+            "unpin_message": self.unpin_message,  # Same as Pin just unpin
+            'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
+            "check_for_key_perms": self.check_for_key_perms  # Checks for specified perms if they have them go in true else go in false Supports or and and
         }
         self.type_functions = {
             'int': int,
@@ -93,6 +94,36 @@ class cake:
             'Exception': Exception,
             'ValueError': ValueError
         }
+
+    async def check_for_key_perms(self, action):
+        """ Checks if they have perms for a certain action Supports 'or' and 'and' """
+        perms = []
+        for x in self.message.author.guild_permissions:
+            if x[1] is True:
+                perms.append(x[0])
+
+        if action["type"] == "and":
+            for perm in await self.get_variable(action, "perms"):
+                if perm not in perms:
+                    return await self.check_perms(action, False)
+            return await self.check_perms(action, True)
+        elif action["type"] == "or":
+            for perm in await self.get_variable(action, "perms"):
+                if perm in perms:
+                    return await self.check_perms(action, True)
+            return await self.check_perms(action, False)
+
+
+
+    async def check_perms(self, action, perms):
+        if perms is True:
+            for new_actions in action["true"]:
+                for new_action in new_actions:
+                    await self.callbacks[new_action](new_actions[new_action])
+        else:
+            for new_actions in action["false"]:
+                for new_action in new_actions:
+                    await self.callbacks[new_action](new_actions[new_action])
 
     async def get_message(self, action):
         id = await self.get_variable(action, "id")
