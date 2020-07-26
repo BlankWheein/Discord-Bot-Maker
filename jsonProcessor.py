@@ -110,7 +110,12 @@ class cake:
             msg = await self.channel.fetch_message(action["message"])
             await msg.pin()
     async def unpin_message(self, action):
-        pass
+        if type(action["message"]) == str:
+            msg = await self.get_variable(action, "message")
+            await msg.unpin()
+        else:
+            msg = await self.channel.fetch_message(action["message"])
+            await msg.unpin()
 
 
     async def wait(self, action):
