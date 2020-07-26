@@ -73,7 +73,7 @@ class cake:
             "unpin_message": self.unpin_message,  # Same as Pin just unpin
             'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
             "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
-            'raise_exception': self.raise_exception
+            'raise_exception': self.raise_exception  # Raises an exception (Useful with the try_catch action)
         }
         self.type_functions = {
             'int': int,
