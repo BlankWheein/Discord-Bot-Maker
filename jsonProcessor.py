@@ -71,7 +71,7 @@ class cake:
             'wait_for': "",
             "pin_message": self.pin_message,
             "unpin_message": self.unpin_message,
-            'set_message': self.set_message
+            'get_message': self.get_message
         }
         self.type_functions = {
             'int': int,
@@ -94,7 +94,7 @@ class cake:
             'ValueError': ValueError
         }
 
-    async def set_message(self, action):
+    async def get_message(self, action):
         id = await self.get_variable(action, "id")
         msg = await self.channel.fetch_message(id)
         if "var" in action:
@@ -104,10 +104,11 @@ class cake:
 
     async def pin_message(self, action):
         if type(action["message"]) == str:
-            msg = self.get_variable(action, "message")
+            msg = await self.get_variable(action, "message")
             await msg.pin()
         else:
-            pass
+            msg = await self.channel.fetch_message(action["message"])
+            await msg.pin()
     async def unpin_message(self, action):
         pass
 
