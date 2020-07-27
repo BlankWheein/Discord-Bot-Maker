@@ -20,6 +20,10 @@ class ChannelNotSet(ValueError):
     pass
 
 
+class ArgumentError(ValueError):
+    pass
+
+
 class RoleIdNotFound(ValueError):
     pass
 

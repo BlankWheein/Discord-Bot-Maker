@@ -7,6 +7,7 @@ from BotMakerExceptions import *
 
 class cake:
     def __init__(self, ctx, command, this, guild=None, channel=None, message=None):
+        self.running = True
         self.this = this
         self.message = None
         self.guild = None
@@ -76,7 +77,8 @@ class cake:
             'raise_exception': self.raise_exception,  # Raises an exception (Useful with the try_catch action)
             'add_roles': self.add_roles,  # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
             'remove_roles': self.remove_roles,  # Same as add_roles just removes instead
-            'set_category': self.set_category  # Sets a category as the main category
+            'set_category': self.set_category,  # Sets a category as the main category
+            'exit_command': self.exit_command
         }
         self.type_functions = {
             'int': int,
@@ -95,14 +97,19 @@ class cake:
         }
         self.exceptions = {
             'Exception': Exception,
-            'ValueError': ValueError
+            'ValueError': ValueError,
+            'ArgumentError': ArgumentError
         }
+
+    async def exit_command(self, action):
+        self.running = False
 
     async def set_category(self, action):
         for channel in self.guild.channels:
             if type(channel) is discord.CategoryChannel:
                 if channel.id == await self.get_variable(action, "id"):
                     self.category = channel
+                    self.commandsVar["category"] = channel
                     if "var" in action:
                         self.commandsVar[action["var"]] = channel
 
@@ -168,11 +175,11 @@ class cake:
         if perms is True:
             for new_actions in action["true"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
         else:
             for new_actions in action["false"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
 
     async def get_message(self, action):
         id = await self.get_variable(action, "id")
@@ -205,19 +212,19 @@ class cake:
         try:
             for new_actions in action["actions"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
         except self.exceptions[action["exception"]] as error:
             self.commandsVar["error"] = error, error.__class__
             for new_actions in action["error"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
 
     async def withTyping(self, action):
         if self.channel is None: raise ChannelNotSet(action)
         async with self.channel.typing():
             for new_actions in action["actions"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
 
     async def purge(self, action):
         if "limit" in action:
@@ -261,11 +268,11 @@ class cake:
         if self.conditions[operator](var1, var2):
             for new_actions in action["true"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
         else:
             for new_actions in action["false"]:
                 for new_action in new_actions:
-                    await self.callbacks[new_action](new_actions[new_action])
+                    if self.running: await self.callbacks[new_action](new_actions[new_action])
 
     async def setGuild(self, action):
         guild = await self.get_variable(action, "id")
@@ -382,20 +389,20 @@ class cake:
                 self.commandsVar["var"] = var
                 for new_actions in action["actions"]:
                     for new_action in new_actions:
-                        await self.callbacks[new_action](new_actions[new_action])
+                        if self.running: await self.callbacks[new_action](new_actions[new_action])
         else:
             if "start" in action:
                 for var in range(action["start"], action["stop"]):
                     self.commandsVar["var"] = var
                     for new_actions in action["actions"]:
                         for new_action in new_actions:
-                            await self.callbacks[new_action](new_actions[new_action])
+                            if self.running: await self.callbacks[new_action](new_actions[new_action])
             else:
                 for var in range(action["stop"]):
                     self.commandsVar["var"] = var
                     for new_actions in action["actions"]:
                         for new_action in new_actions:
-                            await self.callbacks[new_action](new_actions[new_action])
+                            if self.running: await self.callbacks[new_action](new_actions[new_action])
 
     async def parseMessage(self, message: str):
         """Requires String"""
@@ -428,25 +435,22 @@ class cake:
             raise ChannelNotSet(action)
         """Requires action class with message, channel, target and var"""
         message = await self.parseMessage(action["message"])
-
-        if not "delete_after" in action:
-            delete_after = None
-        else:
-            delete_after = action["delete_after"]
+        delete_after = action["delete_after"]
         msg = None
-        if action["channel"] == "channel":
+        channel = await self.get_variable(action, "channel")
+        if channel == "channel":
             msg = await self.channel.send(message, delete_after=delete_after)
-        elif action["channel"] == "ctx.author":
+        elif channel == "author":
             msg = await self.message.author.send(message, delete_after=delete_after)
-        elif action["channel"] == "var":
-            msg = await self.commandsVar[action["target"]].send(message, delete_after=delete_after)
+        else:
+            msg = await channel.send(message, delete_after=delete_after)
         if "var" in action:
             self.commandsVar[action["var"]] = msg
 
     async def processCommands(self):
         for actions in self.command["actions"]:
             for action in actions:
-                await self.callbacks[action](actions[action])
+                if self.running: await self.callbacks[action](actions[action])
                 if "print" in actions[action]:
                     print(await self.parseMessage(actions[action]["print"]))
         return self

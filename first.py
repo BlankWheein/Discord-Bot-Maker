@@ -46,7 +46,8 @@ class Main(commands.Cog):
         for x in self.commands:
             if str(message.content).split(" ")[0] == x:
                 cake = self.client.cake(ctx, x, self)
-                await cake.processCommands()
+                if str(message.content).split(" ")[0] not in cake.events:
+                    await cake.processCommands()
 
     @commands.Cog.listener()
     async def on_ready(self):
