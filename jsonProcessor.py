@@ -223,9 +223,7 @@ class cake:
     async def withTyping(self, action):
         if self.channel is None: raise ChannelNotSet(action)
         async with self.channel.typing():
-            for new_actions in action["actions"]:
-                for new_action in new_actions:
-                    if self.running: await self.callbacks[new_action](new_actions[new_action])
+            await self.process_actions_list(action["actions"])
 
     async def purge(self, action):
         if "limit" in action:
