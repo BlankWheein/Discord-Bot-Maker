@@ -371,16 +371,6 @@ class cake:
             if channel is None: raise ChannelNotFound(name)
             self.commandsVar[action["var"]] = channel
 
-
-        if "id" in action:
-            id = await self.process_var(action, "id")
-            self.commandsVar[action["var"]] = self.ctx.message.guild.get_channel(id)
-        if "name" in action:
-            name = await self.process_var(action, "name")
-            for channel in self.ctx.message.guild.channels:
-                if channel.name == name:
-                    self.commandsVar[action["var"]] = channel
-
     async def get_variable(self, action, target):
         """Gets a variable from self.commandsVar using the key"""
         for key in self.commandsVar:
