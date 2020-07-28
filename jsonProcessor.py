@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 import json
 import logging, sys, re, time, asyncio
 
@@ -228,7 +229,6 @@ class cake:
         else:
             raise ChannelNotSet
 
-
     async def setPressence(self, action):
         game = discord.Game(await self.parseMessage(action["game"]))
         statuses = {
@@ -291,35 +291,30 @@ class cake:
 
     async def getRole(self, action):
         """Requires action class with id, name and var"""
-        if "id" in action:
-            id = await self.get_variable(action, "id")
-            role = self.guild.get_role(id)
-            if role is None:
-                raise RoleIdNotFound(id)
+
+        if action["type"] == 'id':
+            id = await self.get_variable(action, "value")
+            role = get(self.guild.roles, id=id)
+            if role is None: raise RoleIdNotFound(id)
             self.commandsVar[action["var"]] = role
-        elif "name" in action:
-            name = await self.get_variable(action, "name")
-            for role in self.guild.roles:
-                if role.name == name:
-                    self.commandsVar[action["var"]] = role
-                    return
-            raise RoleNameNotFound(name)
+        elif action["type"] == 'name':
+            name = await self.get_variable(action, "value")
+            role = get(self.guild.roles, name=name)
+            if role is None: raise RoleNameNotFound(name)
+            self.commandsVar[action["var"]] = role
 
     async def getMember(self, action):
         """Requires action class with id, name and var"""
-        if "id" in action:
-            id = await self.get_variable(action, "id")
-            member = self.guild.get_member(id)
-            if member is None:
-                raise MemberIdNotFound(id)
-            self.commandsVar[action["var"]] = member
-        elif "name" in action:
-            name = await self.get_variable(action, "name")
-            for member in self.guild.members:
-                if member.name == name:
-                    self.commandsVar[action["var"]] = member
-                    return
-            raise MemberNameNotFound(name)
+        if action["type"] == 'id':
+            id = await self.get_variable(action, "value")
+            role = get(self.guild.members, id=id)
+            if role is None: raise MemberIdNotFound(id)
+            self.commandsVar[action["var"]] = role
+        elif action["type"] == 'name':
+            name = await self.get_variable(action, "value")
+            role = get(self.guild.members, name=name)
+            if role is None: raise MemberNameNotFound(name)
+            self.commandsVar[action["var"]] = role
 
     async def getGuild(self, action):
         """Requires action class with id and var"""
