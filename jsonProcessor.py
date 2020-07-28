@@ -396,26 +396,19 @@ class cake:
         print(await self.parseMessage(action["message"]))
 
     async def forLoop(self, action):
-        if "stop" not in action:
-            variable = await self.get_variable(action, "var")
-            for var in variable:
-                self.commandsVar["var"] = var
-                for new_actions in action["actions"]:
-                    for new_action in new_actions:
-                        if self.running: await self.callbacks[new_action](new_actions[new_action])
-        else:
-            if "start" in action:
-                for var in range(action["start"], action["stop"]):
-                    self.commandsVar["var"] = var
-                    for new_actions in action["actions"]:
-                        for new_action in new_actions:
-                            if self.running: await self.callbacks[new_action](new_actions[new_action])
-            else:
-                for var in range(action["stop"]):
-                    self.commandsVar["var"] = var
-                    for new_actions in action["actions"]:
-                        for new_action in new_actions:
-                            if self.running: await self.callbacks[new_action](new_actions[new_action])
+        if action["type"] == "for x in":
+            variables = await self.get_variable(action, "list")
+            for var in variables:
+                self.commandsVar[action["var"]] = var
+                await self.process_actions_list(action["actions"])
+        elif action["type"] == "stop":
+            for var in range(action["stop"]):
+                self.commandsVar[action["var"]] = var
+                await self.process_actions_list(action["actions"])
+        elif action["type"] == "start":
+            for var in range(action["start"], action["stop"]):
+                self.commandsVar[action["var"]] = var
+                await self.process_actions_list(action["actions"])
 
     async def parseMessage(self, message: str):
         """Requires String"""
