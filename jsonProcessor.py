@@ -5,6 +5,7 @@ import logging, sys, re, time, asyncio
 
 from BotMakerExceptions import *
 
+
 class cake:
     def __init__(self, ctx, command, this, guild=None, channel=None, message=None):
         self.running = True
@@ -70,12 +71,15 @@ class cake:
             'pop_from_list': self.pop_from_list,  # Pops from a list and saves it as a variable
             'try_catch': self.try_catch,  # List of actions inside a try/except
             'wait_for': "",
-            "pin_message": self.pin_message,  # Pins a message from a variable or a message from id in the current channel
+            "pin_message": self.pin_message,
+            # Pins a message from a variable or a message from id in the current channel
             "unpin_message": self.unpin_message,  # Same as Pin just unpin
             'get_message': self.get_message,  # Gets a message from the current channel and saves it in self.commandsVar
-            "check_for_key_perms": self.check_for_key_perms,  # Checks for specified perms if they have them go in true else go in false Supports or and and
+            "check_for_key_perms": self.check_for_key_perms,
+            # Checks for specified perms if they have them go in true else go in false Supports or and and
             'raise_exception': self.raise_exception,  # Raises an exception (Useful with the try_catch action)
-            'add_roles': self.add_roles,  # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
+            'add_roles': self.add_roles,
+            # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
             'remove_roles': self.remove_roles,  # Same as add_roles just removes instead
             'set_category': self.set_category,  # Sets a category as the main category
             'exit_command': self.exit_command
@@ -112,7 +116,6 @@ class cake:
                     self.commandsVar["category"] = channel
                     if "var" in action:
                         self.commandsVar[action["var"]] = channel
-
 
     async def add_roles(self, action):
         if type(action["target"]) is str:
@@ -169,8 +172,6 @@ class cake:
                     return await self.check_perms(action, True)
             return await self.check_perms(action, False)
 
-
-
     async def check_perms(self, action, perms):
         if perms is True:
             for new_actions in action["true"]:
@@ -196,6 +197,7 @@ class cake:
         else:
             msg = await self.channel.fetch_message(action["message"])
             await msg.pin()
+
     async def unpin_message(self, action):
         if type(action["message"]) == str:
             msg = await self.get_variable(action, "message")
@@ -203,7 +205,6 @@ class cake:
         else:
             msg = await self.channel.fetch_message(action["message"])
             await msg.unpin()
-
 
     async def wait(self, action):
         await asyncio.sleep(action["delay"])
@@ -246,7 +247,12 @@ class cake:
     async def process_var(self, action, target):
         """Convert str to a self.commandsVar variable"""
         if type(action[target]) is str:
+
             var = await self.parseMessage(action[target])
+            try:
+                var = int(var)
+            except Exception:
+                pass
             if "type" in action:
                 if action["type"] in self.type_functions:
                     var = self.type_functions[action["type"]](var)
@@ -344,9 +350,9 @@ class cake:
         if target == "discord.Member":
             return self.guild.get_member(id)
         if target == "discord.Role":
-            return self.guild.get_role(id)
+            return self.client.get_role(id)
         if target == "discord.Channel":
-            return self.guild.get_channel(id)
+            return self.client.get_channel(id)
 
     async def convert_var(self, action):
         """Requires action class with type and index"""
@@ -381,6 +387,12 @@ class cake:
         for key in self.commandsVar:
             if f"{{{key}}}" == action[target]:
                 return self.commandsVar[key]
+
+        try:
+            var = int(action[target])
+            return var
+        except Exception:
+            pass
 
         return action[target]
 
@@ -433,22 +445,30 @@ class cake:
 
     async def pop_from_list(self, action):
         if "target" and "var" and "index" in action:
-            self.commandsVar[action["var"]] = self.commandsVar[await self.get_variable(action, "target")].pop(action["index"])
+            self.commandsVar[action["var"]] = self.commandsVar[await self.get_variable(action, "target")].pop(
+                action["index"])
 
     async def sendMessage(self, action):
-        if self.channel is None:
-            raise ChannelNotSet(action)
-        """Requires action class with message, channel, target and var"""
-        message = await self.parseMessage(action["message"])
-        delete_after = action["delete_after"]
+        """Requires action class with message, channel, delete_after var"""
         msg = None
+        message = await self.parseMessage(action["message"])
+        delete_after = await self.get_variable(action, "delete_after")
+        if delete_after == 0 or delete_after == '': delete_after = None
         channel = await self.get_variable(action, "channel")
-        if channel == "channel":
+        if self.guild and type(channel) == int:
+            newchannel = self.client.get_channel(channel)
+            if newchannel:
+                channel = newchannel
+            else:
+                raise ChannelNotFound(channel)
+        if self.channel and channel == "channel":
             msg = await self.channel.send(message, delete_after=delete_after)
-        elif channel == "author":
+        elif self.message and channel == "author":
             msg = await self.message.author.send(message, delete_after=delete_after)
-        else:
+        elif type(channel) == discord.TextChannel:
             msg = await channel.send(message, delete_after=delete_after)
+        else:
+            raise ChannelNotFound
         if "var" in action:
             self.commandsVar[action["var"]] = msg
 
