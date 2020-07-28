@@ -278,6 +278,9 @@ class cake:
         guild = await self.get_variable(action, "id")
         self.guild = self.client.get_guild(guild)
         self.commandsVar["guild"] = self.guild
+        for attribute in [attribute for attribute in dir(self.commandsVar["guild"]) if
+                          not attribute.startswith('__')]:
+            self.commandsVar[f"guild.{attribute}"] = getattr(self.commandsVar["guild"], attribute)
         if "print" in action:
             print(await self.parseMessage(action["print"]))
 
@@ -378,6 +381,7 @@ class cake:
         for key in self.commandsVar:
             if f"{{{key}}}" == action[target]:
                 return self.commandsVar[key]
+
         return action[target]
 
     async def print_function(self, action):
@@ -385,7 +389,8 @@ class cake:
 
     async def forLoop(self, action):
         if "stop" not in action:
-            for var in await self.get_variable(action, "var"):
+            variable = await self.get_variable(action, "var")
+            for var in variable:
                 self.commandsVar["var"] = var
                 for new_actions in action["actions"]:
                     for new_action in new_actions:

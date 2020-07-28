@@ -1,97 +1,134 @@
 {
-   "commandname":{
-      "actions":[
-         {
-            "getArgument":{
-               "index":0,
-               "type":"int",
-               "var":"arg1"
-            }
-         },
-         {
-            "getRole":{
-               "id":"{arg1}",
-               "var":"member",
-               "name":"somename"
-            }
-         },
-         {
-            "getMember":{
-               "id":"{arg1}",
-               "var":"member",
-               "name":"somename"
-            }
-         },
-         {
-            "getGuild":{
-               "id":"{arg1}",
-               "var":"member",
-               "name":"somename"
-            }
-         },
+   "commandname": {
+      "actions": [
+
+         {"getRole": {
+            "comment": "both id and name should not be present at the same time",
+            "comment": "id can be str and int, if its a number hardcoded it should be int",
+            "comment": "if its a variable it should be str like '{var}'",
+            "comment": "var is the name which the variable should be stored as",
+            "id": "{myvar}",
+            "name": "{somevar}",
+            "var": "myrole"
+         }},
+
+         {"getGuild": {
+            "comment": "Look Getrole",
+            "id": "{myguildid}",
+            "name": "Bot Maker Discord",
+            "var": "myguild"
+         }},
+
+         {"getChannel": {
+            "comment": "Look Getrole",
+            "id": "{mychannelid}",
+            "name": "Developers",
+            "var": "mychannel"
+         }},
+
+         {"getArgument": {
+            "comment": "needs an index as an int",
+            "comment": "type can be one of pythons types",
+            "comment": "var is the same as above (not gonna explain var anymore)",
+            "index": 0,
+            "type": "int",
+            "var": "somevar"
+         }},
+
+         {"sendMessage": {
+            "comment": "channel works like 'name' and 'id'",
+            "comment": "if the user types a number, it should be an int",
+            "comment": "else let it be a str",
+            "comment": "if they type a variable make sure it is sorrounded with {}",
+            "comment": "delete_after has to be a str if they but 0 or nothing let it be null",
+            "message": "some message str",
+            "channel": "{mychannel}",
+            "delete_after": null,
+            "var": "oseifjspe"
+         }},
+         {"setVariable": {
+            "type": "int",
+            "content": 12319327198,
+            "var": ""
+         }},
+
+         {"ifStatement": {
+            "var1": "",
+            "var2": "",
+            "operator": "",
+            "true": [],
+            "false": []
+
+         }},
+
+         {"forLoop": {
+            "var": "{mylist}",
+            "actions": [],
+            "start": null,
+            "stop": null
+         }},
+
+         {"setPressence": {
+            "game": "TuckFaaha",
+            "status": "dnd"
+         }},
+         {"try_catch": {
+            "actions": [],
+            "error": [],
+            "exception": "Exception"
+         }},
+
+         {"check_for_key_perms": {
+            "type": "and",
+            "perms": [
+               "Administrator",
+               "manage_members"],
+            "true": [],
+            "false": []
+         }},
+
+         {"raise_exception": {
+            "exception": "Exception"
+         }},
+
+         {"withTyping": {
+            "actions": []
+         }},
+
+         {"get_message": {
+            "id": "{myid}",
+            "var": "mymsg"
+         }},
          {"purge": {
-                "limit": null,
-                "var": "deleted"
-            }},
-         {
-            "getChannel":{
-               "id":"{arg1}",
-               "var":"member",
-               "name":"somename"
-            }
-         },
-         {
-            "getMember":{
-               "id":"{arg1} (the id of the member)",
-               "var":"member",
-               "name":"somename"
-            }
-         },
-         {
-            "sendMessage":{
-               "message":"The message to send {stuff}",
-               "channel":"ctx.channel or ctx.author or var",
-               "target":"arg1 (The variable name of the channel)",
-               "var":"saves the message as a variable",
-               "delete_after": 10
-            }
-         },
-         {
-            "setVar":{
-               "content":"some variable",
-               "type":"some type",
-               "var":"what to save it as"
-            }
-         },
-         {
-            "ifStatement":{
-               "var1":"before operator",
-               "var2":"after operator",
-               "operator":"the operator",
-               "true":[
-                  "List of actions if its true"
-               ],
-               "false":[
-                  "List of actions if its False"
-               ]
-            }
-         },
-         {
-            "forLoop":{
-               "stop": 5,
-               "actions":[
-                  {
-                     "sendMessage":{
-                        "channel":"ctx.channel",
-                        "message":"this is the message {var}",
-                        "var":"message"
-                     }
-                  },
-                  {"withTyping": {
-                "actions": []}}
-               ]
-            }
-         }
+            "limit": null,
+            "var": "messages deleted"
+         }},
+
+         {"create_list": {
+            "var": "mylistname"
+         }},
+
+         {"append_to_list": {
+            "target": "mylistname",
+            "value": ""
+         }},
+
+         {"add_roles": {
+            "target": "{somevar}",
+            "roles": "{list_of_roles}",
+            "reason": null
+         }},
+
+         {"remove_roles": {
+            "target": "{somevar}",
+            "roles": "{list_of_roles}",
+            "reason": null
+         }}
+
+
+
+
+
       ]
    }
 }
