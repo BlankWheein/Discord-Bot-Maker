@@ -218,10 +218,16 @@ class cake:
             await self.process_actions_list(action["actions"])
 
     async def purge(self, action):
-        if "limit" in action:
-            delete = await self.channel.purge(limit=action["limit"])
-            if "var" in action:
+        if self.channel:
+            limit = await self.get_variable(action, "limit")
+            if type(limit) is not int:
+                raise ValueError(limit)
+            delete = await self.channel.purge(limit=limit)
+            if action["var"] is not None and action["var"] != '':
                 self.commandsVar[action["var"]] = len(delete)
+        else:
+            raise ChannelNotSet
+
 
     async def setPressence(self, action):
         game = discord.Game(await self.parseMessage(action["game"]))
