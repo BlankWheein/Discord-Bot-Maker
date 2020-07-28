@@ -174,13 +174,9 @@ class cake:
 
     async def check_perms(self, action, perms):
         if perms is True:
-            for new_actions in action["true"]:
-                for new_action in new_actions:
-                    if self.running: await self.callbacks[new_action](new_actions[new_action])
+            await self.process_actions_list(action["true"])
         else:
-            for new_actions in action["false"]:
-                for new_action in new_actions:
-                    if self.running: await self.callbacks[new_action](new_actions[new_action])
+            await self.process_actions_list(action["false"])
 
     async def get_message(self, action):
         id = await self.get_variable(action, "id")
@@ -460,7 +456,6 @@ class cake:
             self.commandsVar[action["var"]] = msg
 
     async def process_actions_list(self, action):
-        print(action)
         for new_actions in action:
             for new_action in new_actions:
                 if self.running:
