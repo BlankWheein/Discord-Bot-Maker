@@ -272,13 +272,9 @@ class cake:
         var2 = await self.get_variable(action, "var2")
         operator = await self.get_variable(action, "operator")
         if self.conditions[operator](var1, var2):
-            for new_actions in action["true"]:
-                for new_action in new_actions:
-                    if self.running: await self.callbacks[new_action](new_actions[new_action])
+            await self.process_actions_list(action["true"])
         else:
-            for new_actions in action["false"]:
-                for new_action in new_actions:
-                    if self.running: await self.callbacks[new_action](new_actions[new_action])
+            await self.process_actions_list(action["false"])
 
     async def setGuild(self, action):
         guild = await self.get_variable(action, "id")
@@ -471,6 +467,13 @@ class cake:
             raise ChannelNotFound
         if "var" in action:
             self.commandsVar[action["var"]] = msg
+
+    async def process_actions_list(self, action):
+        print(action)
+        for new_actions in action:
+            for new_action in new_actions:
+                if self.running:
+                    await self.callbacks[new_action](new_actions[new_action])
 
     async def processCommands(self):
         for actions in self.command["actions"]:
