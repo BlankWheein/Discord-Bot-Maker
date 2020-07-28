@@ -12,6 +12,10 @@ class RoleNameNotFound(ValueError):
     pass
 
 
+class ChannelNotFound(ValueError):
+    pass
+
+
 class NoPermsError(ValueError):
     pass
 
