@@ -335,11 +335,11 @@ class cake:
 
     async def get_discord_object(self, id, target):
         if target == "discord.Member":
-            return self.guild.get_member(id)
+            return get(self.client.get_all_members(), id=id)
         if target == "discord.Role":
-            return self.client.get_role(id)
+            return self.guild.get_role(id)
         if target == "discord.Channel":
-            return self.client.get_channel(id)
+            return get(self.client.get_all_channels(), id=id)
 
     async def convert_var(self, action):
         """Requires action class with type and index"""
