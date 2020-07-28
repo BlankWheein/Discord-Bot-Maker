@@ -307,14 +307,14 @@ class cake:
         """Requires action class with id, name and var"""
         if action["type"] == 'id':
             id = await self.get_variable(action, "value")
-            role = get(self.guild.members, id=id)
-            if role is None: raise MemberIdNotFound(id)
-            self.commandsVar[action["var"]] = role
+            member = get(self.guild.members, id=id)
+            if member is None: raise MemberIdNotFound(id)
+            self.commandsVar[action["var"]] = member
         elif action["type"] == 'name':
             name = await self.get_variable(action, "value")
-            role = get(self.guild.members, name=name)
-            if role is None: raise MemberNameNotFound(name)
-            self.commandsVar[action["var"]] = role
+            member = get(self.guild.members, name=name)
+            if member is None: raise MemberNameNotFound(name)
+            self.commandsVar[action["var"]] = member
 
     async def getGuild(self, action):
         """Requires action class with id and var"""
@@ -360,6 +360,18 @@ class cake:
 
     async def getChannel(self, action):
         """Requires action class with var, id and name"""
+        if action["type"] == 'id':
+            id = await self.get_variable(action, "value")
+            channel = get(self.guild.channels, id=id)
+            if channel is None: raise ChannelNotFound(id)
+            self.commandsVar[action["var"]] = channel
+        elif action["type"] == 'name':
+            name = await self.get_variable(action, "value")
+            channel = get(self.guild.channels, name=name)
+            if channel is None: raise ChannelNotFound(name)
+            self.commandsVar[action["var"]] = channel
+
+
         if "id" in action:
             id = await self.process_var(action, "id")
             self.commandsVar[action["var"]] = self.ctx.message.guild.get_channel(id)
