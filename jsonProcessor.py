@@ -192,7 +192,9 @@ class cake:
             msg = await self.get_variable(action, "message")
             await msg.pin()
         else:
-            msg = await self.channel.fetch_message(action["message"])
+            msg = await self.channel.fetch_message(await self.get_variable(action, "message"))
+            if msg is None:
+                return MsgNotFoundError(action)
             await msg.pin()
 
     async def unpin_message(self, action):
@@ -210,7 +212,10 @@ class cake:
         try:
             await self.process_actions_list(action["actions"])
         except self.exceptions[action["exception"]] as error:
-            self.commandsVar["error"] = error, error.__class__
+            if action["errorvar"] is None or "":
+                self.commandsVar["error"] = error, error.__class__
+            else:
+                self.commandsVar[action["errorvar"]] = error, error.__class__
             await self.process_actions_list(action["error"])
 
     async def withTyping(self, action):
@@ -376,7 +381,6 @@ class cake:
         for key in self.commandsVar:
             if f"{{{key}}}" == action[target]:
                 return self.commandsVar[key]
-
         try:
             var = int(action[target])
             return var

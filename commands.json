@@ -1,21 +1,78 @@
 {
-  "GUILDID": 736592970601594921,
   "on_ready": {
     "actions": [
-
-      {"setGuild": {
-        "id": 736249300807450665
-      }},
-      {"forLoop": {
-        "var": "{guild.channels}",
-        "actions": [
-          {"print": {
-            "message": "{var}"
-          }}
-        ]
+      {
+        "setChannel": {
+          "id": "736592970601594921"
+        }
+      },
+      {
+        "setVariable": {
+          "content": "var_content",
+          "type": "str",
+          "var": "var1"
+        }
+      },
+      {
+        "setVariable": {
+          "content": "var_content",
+          "type": "str",
+          "var": "var2"
+        }
+      },
+      {
+        "ifStatement": {
+          "var1": "{var1}",
+          "var2": "{var2}",
+          "operator": "!=",
+          "true": [
+            {
+              "sendMessage": {
+                "message": "Variables are equal",
+                "channel": "channel",
+                "var": "",
+                "delete_after": "20"
+              }
+            },
+            {"print": {
+              "message": "This is True"
+            }}
+          ],
+          "false": [
+            {
+              "sendMessage": {
+                "message": "Variables are different",
+                "channel": "channel",
+                "var": "",
+                "delete_after": "20"
+              }
+            },
+            {"print": {
+              "message": "This is False"
+            }}
+          ]
+        }
+      },
+      {
+        "sendMessage": {
+          "message": "If hsa ended",
+          "channel": "channel",
+          "var": "",
+          "delete_after": "20"
+        }
+      },
+      {"print":{
+        "message":"i am working, i think"
       }}
-
+    ]
+  },
+  "test": {
+    "actions": [
+      {"sendMessage":{
+        "message": "i am working, i think",
+        "channel": "channel",
+        "delete_after":"20"
+      }}
     ]
   }
-
 }
