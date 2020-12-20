@@ -415,7 +415,7 @@ class cake:
             
             :mod:`status` : The status to show.
              
-             *  :mod:`dnd` : Shows the status **`Do not disturd`**
+             *  :mod:`dnd` : Shows the status **`Do not disturb`**
              *  :mod:`idle` : Shows the status **`Idle`**
              *  :mod:`offline` : Shows the status **`Invisible`**
              *  :mod:`online` : Shows the status **`Online`**
@@ -821,7 +821,26 @@ class cake:
                 action["index"])
 
     async def sendMessage(self, action):
-        """Requires action class with message, channel, delete_after var"""
+        """
+        Sends a message in the channel
+
+        Members:
+            :mod:`message` : .
+
+            :mod:`delete_after` : .
+
+            :mod:`channel` : The channel to send the message.
+                
+                * :mod:`channel` : The channel the command was executed in
+
+                * :mod:`author` : The author of the member who executed the channel
+
+                * :mod:`variable` : Custom channel
+
+            :mod:`var` : Saves the message object.
+        
+        """
+
         msg = None
         message = await self.parseMessage(action["message"])
         delete_after = await self.get_variable(action, "delete_after")
@@ -845,12 +864,14 @@ class cake:
             self.commandsVar[action["var"]] = msg
 
     async def process_actions_list(self, action):
+        """ Proccesses the actions list """
         for new_actions in action:
             for new_action in new_actions:
                 if self.running:
                     await self.callbacks[new_action](new_actions[new_action])
 
     async def processCommands(self):
+        """ Proccesses the command actions """
         for actions in self.command["actions"]:
             for action in actions:
                 if self.running: await self.callbacks[action](actions[action])
