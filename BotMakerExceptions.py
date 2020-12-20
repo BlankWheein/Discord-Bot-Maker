@@ -38,3 +38,7 @@ class MemberNameNotFound(ValueError):
 
 class MemberIdNotFound(ValueError):
     pass
+
+
+class MsgNotFoundError(ValueError):
+    pass

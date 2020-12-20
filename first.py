@@ -2,10 +2,7 @@ import discord
 from discord.ext import commands
 import json
 import logging, sys, re, time, asyncio
-
 from BotMakerExceptions import *
-
-
 
 def init_logger():
     global logger
@@ -35,7 +32,6 @@ class Main(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.logger = init_logger()
-
 
     @commands.Cog.listener()
     async def on_message(self, message):

@@ -9,6 +9,43 @@ from BotMakerExceptions import *
 
 class cake:
     def __init__(self, ctx, command, this, guild=None, channel=None, message=None):
+        """
+        This section will explain the actions variables and how they are used.
+
+        Members:
+            :class:`self.channel` : This contexts channel object.
+            
+            :class:`self.message` : This contexts message object.
+            
+            :class:`self.guild` : This contexts guild object.
+
+            :class:`self.running` : This controls if the command is running.
+
+            :class:`self.command` : The command executed.
+
+            :class:`self.this` : Discord object.
+
+            :class:`self.client` : Discord Client object.
+
+            :class:`self.commandsVar` : This contexts variables.
+
+            :class:`self.commandsArgs` : Not used atm, trying to find out why...
+
+            :class:`self.args` : Message arguments.
+
+            :class:`self.events` : Events.
+
+            :class:`self.callbacks` : Functions available.
+
+            :class:`self.type_functions` : types.
+
+            :class:`self.conditions` : Conditions for the if statements.
+
+            :class:`self.exception` : The exceptions the command can raise.
+
+
+
+        """
         self.running = True
         self.this = this
         self.message = None
@@ -107,9 +144,23 @@ class cake:
         }
 
     async def exit_command(self, action):
+        """
+        This action stops the current command.
+
+        Members:
+            None
+
+        """
         self.running = False
 
+
     async def set_category(self, action):
+        """Sets the current category from id
+
+        Members:
+            :class:`id` : The id of the category
+
+        **this will be removed after the command has been executed**"""
         for channel in self.guild.channels:
             if type(channel) is discord.CategoryChannel:
                 if channel.id == await self.get_variable(action, "id"):
@@ -119,6 +170,16 @@ class cake:
                         self.commandsVar[action["var"]] = channel
 
     async def add_roles(self, action):
+        """
+        Adds a role to the target
+
+        Members:
+            :class:`target` : (str / int / discord.member / author):  The target
+
+            :class:`roles` : list of roles?
+
+        """
+
         if type(action["target"]) is str:
             target = await self.get_variable(action, "target")
             if type(target) is int:
@@ -136,6 +197,16 @@ class cake:
         await target.add_roles(roles, reason=action["reason"])
 
     async def remove_roles(self, action):
+        """
+        Removes a role to the target
+
+        Members:
+            :class:`target` : (str / int / discord.member / author):  The target
+
+            :class:`roles` : list of roles?
+
+        """
+
         if type(action["target"]) is str:
             target = await self.get_variable(action, "target")
             if type(target) is int:
@@ -153,10 +224,28 @@ class cake:
         await target.remove_roles(roles, reason=action["reason"])
 
     async def raise_exception(self, action):
+        """Raises an exception
+
+        Members:
+            :class:`exception` : The exception to raise
+
+
+        """
         raise self.exceptions[action["exception"]]
 
     async def check_for_key_perms(self, action):
-        """ Checks if they have perms for a certain action Supports 'or' and 'and' """
+        """ 
+        Checks if they have perms for a certain action Supports :class:`and` and :class:`or`
+        
+
+        Members:
+            :class:`type` : (str): Can be :class:`and` or :class:`or`
+
+            :class:`perms` : The required permission
+
+        
+        
+        """
         perms = []
         for x in self.message.author.guild_permissions:
             if x[1] is True:
@@ -174,12 +263,26 @@ class cake:
             return await self.check_perms(action, False)
 
     async def check_perms(self, action, perms):
+        """ Processes the action list """
+
         if perms is True:
             await self.process_actions_list(action["true"])
         else:
             await self.process_actions_list(action["false"])
 
     async def get_message(self, action):
+        """
+        Gets a message from id
+
+        Members:
+            :class:`id` :  The id of the message.
+
+            :class:`var` : The name of the variable to put the message into.
+        
+        .. note::
+            This requires :mod:`self.channel` to be set.
+        
+        """
         id = await self.get_variable(action, "id")
         msg = await self.channel.fetch_message(id)
         if "var" in action:
@@ -188,6 +291,16 @@ class cake:
             self.commandsVar["msg"] = msg
 
     async def pin_message(self, action):
+        """
+        Pins the specified message
+
+        Members:
+            :mod:`message` : The message to pin.
+
+        .. note::
+            This requires :mod:`self.channel` to be set.
+
+        """
         if type(action["message"]) == str:
             msg = await self.get_variable(action, "message")
             await msg.pin()
@@ -198,6 +311,16 @@ class cake:
             await msg.pin()
 
     async def unpin_message(self, action):
+        """
+        Unpins the specified message
+
+        Members:
+            :mod:`message` : The message to unpin.
+
+        .. note::
+            This requires :mod:`self.channel` to be set.
+
+        """
         if type(action["message"]) == str:
             msg = await self.get_variable(action, "message")
             await msg.unpin()
@@ -206,9 +329,32 @@ class cake:
             await msg.unpin()
 
     async def wait(self, action):
+        """
+        Sleeps for x amount of time
+
+        Members:
+            :mod:`delay` : The amount of time to sleep in ms.
+
+        """
         await asyncio.sleep(action["delay"])
 
     async def try_catch(self, action):
+        """
+        Try catch.
+
+        Members:
+            :mod:`actions` : The list of actions to try.
+
+            :mod:`exception` : The exception.
+
+            :mod:`errorvar` : Saves the error message in this variable name.
+
+            :mod:`error` : The list of actions if the exception is raised.
+
+        .. note::
+            If :mod:`errorvar` is none, the error message will be saved as `error`.
+        
+        """
         try:
             await self.process_actions_list(action["actions"])
         except self.exceptions[action["exception"]] as error:
@@ -219,11 +365,37 @@ class cake:
             await self.process_actions_list(action["error"])
 
     async def withTyping(self, action):
+        """
+        Starts a context manager with :mod:`with Typing`.
+
+        Members:
+            :mod:`actions` : The list of actions the context manager wraps around
+
+        .. note::
+            This requires :mod:`self.channel` to be set.
+
+        """
+
+
         if self.channel is None: raise ChannelNotSet(action)
         async with self.channel.typing():
             await self.process_actions_list(action["actions"])
 
     async def purge(self, action):
+        """
+        Purges messages from :mod:`self.channel`
+
+        Members:
+            :mod:`limit` : The max amount of messages to delete.
+            
+            :mod:`var` : The amount of messages deleted will be stored in this variable.
+
+        .. note::
+            This requires :mod:`self.channel` to be set.
+
+            If :mod:`var` is not set it will not store the variable
+
+        """
         if self.channel:
             limit = await self.get_variable(action, "limit")
             if type(limit) is not int:
@@ -235,6 +407,23 @@ class cake:
             raise ChannelNotSet
 
     async def setPressence(self, action):
+        """
+        Sets the bots pressence
+
+        Members:
+            :mod:`game` : The message to display.
+            
+            :mod:`status` : The status to show.
+             
+             *  :mod:`dnd` : Shows the status **`Do not disturd`**
+             *  :mod:`idle` : Shows the status **`Idle`**
+             *  :mod:`offline` : Shows the status **`Invisible`**
+             *  :mod:`online` : Shows the status **`Online`**
+
+        .. note::
+            If :mod:`status` is '' it will not update the status.
+
+        """
         game = discord.Game(await self.parseMessage(action["game"]))
         statuses = {
             'dnd': discord.Status.dnd,
@@ -269,6 +458,21 @@ class cake:
         self.commandsVar[action["var"]] = var
 
     async def if_statement(self, action):
+        """
+        If statement 
+        
+        Members:
+            :mod:`var1` : Variable 1.
+            
+            :mod:`var2` : Variable 2.
+            
+            :mod:`operator` : The operator. This can be :mod:`self.conditions`.
+            
+            :mod:`true` : The list of actions if true.
+            
+            :mod:`false` : The list of actions if false.
+        
+        """
         var1 = await self.get_variable(action, "var1")
         var2 = await self.get_variable(action, "var2")
         operator = await self.get_variable(action, "operator")
@@ -278,6 +482,21 @@ class cake:
             await self.process_actions_list(action["false"])
 
     async def setGuild(self, action):
+        """
+        Sets the :mod:`self.guild` object
+
+        Members:
+            :mod:`id` : The id of the guild you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        .. note::
+            :mod:`self.guild` will be automatically set if there is ctx
+            
+            ctx will be set if a command is used in a server.
+
+        
+        """
         guild = await self.get_variable(action, "id")
         self.guild = self.client.get_guild(guild)
         self.commandsVar["guild"] = self.guild
@@ -288,6 +507,20 @@ class cake:
             print(await self.parseMessage(action["print"]))
 
     async def setChannel(self, action):
+        """
+        Sets the :mod:`self.channel` object
+
+        Members:
+            :mod:`id` : The id of the channel you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        .. note::
+            :mod:`self.channel` will be automatically set if there is ctx
+            
+            ctx will be set if a command is used in a server.
+        
+        """
         channel = await self.get_variable(action, "id")
         self.channel = self.client.get_channel(channel)
         self.commandsVar["channel"] = self.channel
@@ -295,7 +528,19 @@ class cake:
             print(await self.parseMessage(action["print"]))
 
     async def getRole(self, action):
-        """Requires action class with id, name and var"""
+        """
+        Gets a :mod:`Role` object
+
+        Members:
+            :mod`type` : How you are searching for the role, this can be name or id.
+
+            :mod:`id` : The id of the role you are looking for.
+
+            :mod:`name` : The name of the role you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        """
 
         if action["type"] == 'id':
             id = await self.get_variable(action, "value")
@@ -309,7 +554,19 @@ class cake:
             self.commandsVar[action["var"]] = role
 
     async def getMember(self, action):
-        """Requires action class with id, name and var"""
+        """
+        Gets a :mod:`Member` object
+
+        Members:
+            :mod`type` : How you are searching for the member, this can be name or id.
+
+            :mod:`id` : The id of the member you are looking for.
+
+            :mod:`name` : The name of the member you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        """
         if action["type"] == 'id':
             id = await self.get_variable(action, "value")
             member = get(self.guild.members, id=id)
@@ -322,7 +579,19 @@ class cake:
             self.commandsVar[action["var"]] = member
 
     async def getGuild(self, action):
-        """Requires action class with id and var"""
+        """
+        Gets a :mod:`Guild` object
+
+        Members:
+            :mod`type` : How you are searching for the guild, this can be name or id.
+
+            :mod:`id` : The id of the guild you are looking for.
+
+            :mod:`name` : The name of the guild you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        """
         if "id" in action:
             id = await self.get_variable(action, "id")
             guild = self.client.get_guild(id)
@@ -339,6 +608,23 @@ class cake:
             raise GuildNameNotFound(name)
 
     async def get_discord_object(self, id, target):
+        """
+        Converts a variable to a discord object.
+
+        Args:
+
+            id : The id of the object
+            target : the type to convert too. 
+
+        Types:
+
+            * discord.Member
+
+            * discord.Role
+
+            * discord.Channel
+        
+        """
         if target == "discord.Member":
             return get(self.client.get_all_members(), id=id)
         if target == "discord.Role":
@@ -360,11 +646,33 @@ class cake:
             return self.type_functions[action["type"]](self.args[action["index"]])
 
     async def getArgument(self, action):
-        """Requires action class with var"""
+        """
+        Converts an argument to a variable
+
+        Members:
+            :mod:`var` : The name to store the arugment as
+
+            :mod:`type` : The type of variable
+
+            :mod:`index` : The index of the argument
+
+        """
         self.commandsVar[action["var"]] = await self.convert_var(action)
 
     async def getChannel(self, action):
-        """Requires action class with var, id and name"""
+        """
+        Gets a :mod:`Channel` object
+
+        Members:
+            :mod`type` : How you are searching for the channel, this can be name or id.
+
+            :mod:`id` : The id of the channel you are looking for.
+
+            :mod:`name` : The name of the channel you are looking for.
+            
+            :mod:`print` : What to print to console when this action is complete
+
+        """
         if action["type"] == 'id':
             id = await self.get_variable(action, "value")
             channel = get(self.guild.channels, id=id)
@@ -390,9 +698,42 @@ class cake:
         return action[target]
 
     async def print_function(self, action):
+        """
+        Prints the message to console
+
+        Members:
+            :mod:`message` The message to print
+        
+        .. note::
+            Some characters can not be displayed in console. its recommended to use id's of objects if available
+        
+        """
         print(await self.parseMessage(action["message"]))
 
     async def forLoop(self, action):
+        """
+        For loop
+
+        Members:
+            :mod:`type` The type of for loop
+                
+                * :mod:`for x in`
+                
+                * :mod:`stop`
+
+                * :mod:`start`
+            
+            :mod:`list` : the list to cycle through, used in for x in
+
+            :mod:`stop` : the end number, used in start and stop
+
+            :mod:`start` : the start number, used in start
+
+            :mod:`actions` : the list of actions to do every iteration
+
+            :mod:`var` : The current iteration of the for loop
+        
+        """
         if action["type"] == "for x in":
             variables = await self.get_variable(action, "list")
             for var in variables:
@@ -408,7 +749,14 @@ class cake:
                 await self.process_actions_list(action["actions"])
 
     async def parseMessage(self, message: str):
-        """Requires String"""
+        """
+        Parses a string
+
+        Args:
+            message : the message to parse.
+        
+        
+        """
         for variable in self.commandsVar:
             for attribute in [attribute for attribute in dir(self.commandsVar[variable]) if
                               not attribute.startswith('__')]:
@@ -422,14 +770,52 @@ class cake:
         return message
 
     async def create_list(self, action):
+
+        """
+        Creates an empty list
+
+        Members:
+            :mod:`var` The name to store the list as
+        
+        .. note::
+            If :mod:`var` is not present nothing will happen
+
+        """
+
         if "var" in action:
             self.commandsVar[action["var"]] = []
 
     async def append_to_list(self, action):
+        """
+        Appends to a list
+
+        Members:
+            :mod:`value` The value of the variable
+
+            :mod:`target` the list to append to
+        
+        .. note::
+            If :mod:`target` or :mod:`value` is not present nothing will happen
+
+        """
         if "value" and "target" in action:
             self.commandsVar[action["target"]].append(await self.get_variable(action, "value"))
 
     async def pop_from_list(self, action):
+        """
+        Pops from list
+
+        Members:
+            :mod:`var` : the variable to save the value in
+
+            :mod:`target` : the list to pop from
+
+            :mod:`index` : The index to pop
+        
+        .. note::
+            If either :mod:`target`, :mod:`var` or :mod:`index` is not present nothing will happen
+
+        """
         if "target" and "var" and "index" in action:
             self.commandsVar[action["var"]] = self.commandsVar[await self.get_variable(action, "target")].pop(
                 action["index"])
