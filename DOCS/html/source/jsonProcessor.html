@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jsonProcessor module &mdash; Bot Maker now documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Bot Maker
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">jsonProcessor module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bot Maker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>jsonProcessor module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/jsonProcessor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jsonProcessor">
+<span id="jsonprocessor-module"></span><h1>jsonProcessor module<a class="headerlink" href="#module-jsonProcessor" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="jsonProcessor.cake">
+<em class="property">class </em><code class="sig-prename descclassname">jsonProcessor.</code><code class="sig-name descname">cake</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ctx</span></em>, <em class="sig-param"><span class="n">command</span></em>, <em class="sig-param"><span class="n">this</span></em>, <em class="sig-param"><span class="n">guild</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This section will explain the actions variables and how they are used.</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.channel</span></code> : This contexts channel object.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.message</span></code> : This contexts message object.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.guild</span></code> : This contexts guild object.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.running</span></code> : This controls if the command is running.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.command</span></code> : The command executed.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.this</span></code> : Discord object.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.client</span></code> : Discord Client object.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.commandsVar</span></code> : This contexts variables.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.commandsArgs</span></code> : Not used atm, trying to find out why…</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.args</span></code> : Message arguments.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.events</span></code> : Events.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.callbacks</span></code> : Functions available.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.type_functions</span></code> : types.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.conditions</span></code> : Conditions for the if statements.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">self.exception</span></code> : The exceptions the command can raise.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="jsonProcessor.cake.exit_command">
+<em class="property">async </em><code class="sig-name descname">exit_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.exit_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.exit_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>This action stops the current command.</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.set_category">
+<em class="property">async </em><code class="sig-name descname">set_category</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.set_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.set_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the current category from id</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">id</span></code> : The id of the category</p>
+</dd>
+</dl>
+<p><strong>this will be removed after the command has been executed</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.add_roles">
+<em class="property">async </em><code class="sig-name descname">add_roles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.add_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.add_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a role to the target</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">target</span></code> : (str / int / discord.member / author):  The target</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">roles</span></code> : list of roles?</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.remove_roles">
+<em class="property">async </em><code class="sig-name descname">remove_roles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.remove_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.remove_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a role to the target</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">target</span></code> : (str / int / discord.member / author):  The target</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">roles</span></code> : list of roles?</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.raise_exception">
+<em class="property">async </em><code class="sig-name descname">raise_exception</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.raise_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.raise_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises an exception</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">exception</span></code> : The exception to raise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.check_for_key_perms">
+<em class="property">async </em><code class="sig-name descname">check_for_key_perms</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.check_for_key_perms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.check_for_key_perms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if they have perms for a certain action Supports <code class="xref py py-class docutils literal notranslate"><span class="pre">and</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">or</span></code></p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code> : (str): Can be <code class="xref py py-class docutils literal notranslate"><span class="pre">and</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">or</span></code></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">perms</span></code> : The required permission</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.check_perms">
+<em class="property">async </em><code class="sig-name descname">check_perms</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">perms</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.check_perms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.check_perms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the action list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.get_message">
+<em class="property">async </em><code class="sig-name descname">get_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.get_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.get_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a message from id</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">id</span></code> :  The id of the message.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">var</span></code> : The name of the variable to put the message into.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This requires <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> to be set.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.pin_message">
+<em class="property">async </em><code class="sig-name descname">pin_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.pin_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.pin_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pins the specified message</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">message</span></code> : The message to pin.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This requires <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> to be set.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.unpin_message">
+<em class="property">async </em><code class="sig-name descname">unpin_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.unpin_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.unpin_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpins the specified message</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">message</span></code> : The message to unpin.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This requires <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> to be set.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.wait">
+<em class="property">async </em><code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sleeps for x amount of time</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">delay</span></code> : The amount of time to sleep in ms.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.try_catch">
+<em class="property">async </em><code class="sig-name descname">try_catch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.try_catch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.try_catch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try catch.</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">actions</span></code> : The list of actions to try.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">exception</span></code> : The exception.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">errorvar</span></code> : Saves the error message in this variable name.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">error</span></code> : The list of actions if the exception is raised.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">errorvar</span></code> is none, the error message will be saved as <cite>error</cite>.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.withTyping">
+<em class="property">async </em><code class="sig-name descname">withTyping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.withTyping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.withTyping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a context manager with <code class="xref py py-mod docutils literal notranslate"><span class="pre">with</span> <span class="pre">Typing</span></code>.</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">actions</span></code> : The list of actions the context manager wraps around</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This requires <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> to be set.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.purge">
+<em class="property">async </em><code class="sig-name descname">purge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.purge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Purges messages from <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code></p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">limit</span></code> : The max amount of messages to delete.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> : The amount of messages deleted will be stored in this variable.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This requires <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> to be set.</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> is not set it will not store the variable</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.setPressence">
+<em class="property">async </em><code class="sig-name descname">setPressence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.setPressence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.setPressence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the bots pressence</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">game</span></code> : The message to display.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">status</span></code> : The status to show.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">dnd</span></code> : Shows the status <strong>`Do not disturb`</strong></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">idle</span></code> : Shows the status <strong>`Idle`</strong></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">offline</span></code> : Shows the status <strong>`Invisible`</strong></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">online</span></code> : Shows the status <strong>`Online`</strong></p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">status</span></code> is ‘’ it will not update the status.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.process_var">
+<em class="property">async </em><code class="sig-name descname">process_var</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">target</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.process_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.process_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert str to a self.commandsVar variable</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.set_var">
+<em class="property">async </em><code class="sig-name descname">set_var</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.set_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.set_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a variable in self.commandsVar</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.if_statement">
+<em class="property">async </em><code class="sig-name descname">if_statement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.if_statement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.if_statement" title="Permalink to this definition">¶</a></dt>
+<dd><p>If statement</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var1</span></code> : Variable 1.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var2</span></code> : Variable 2.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">operator</span></code> : The operator. This can be <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.conditions</span></code>.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">true</span></code> : The list of actions if true.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">false</span></code> : The list of actions if false.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.setGuild">
+<em class="property">async </em><code class="sig-name descname">setGuild</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.setGuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.setGuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.guild</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the guild you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">self.guild</span></code> will be automatically set if there is ctx</p>
+<p>ctx will be set if a command is used in a server.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.setChannel">
+<em class="property">async </em><code class="sig-name descname">setChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.setChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.setChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the channel you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">self.channel</span></code> will be automatically set if there is ctx</p>
+<p>ctx will be set if a command is used in a server.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.getRole">
+<em class="property">async </em><code class="sig-name descname">getRole</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.getRole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.getRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a <code class="xref py py-mod docutils literal notranslate"><span class="pre">Role</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p>:mod`type` : How you are searching for the role, this can be name or id.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the role you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">name</span></code> : The name of the role you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.getMember">
+<em class="property">async </em><code class="sig-name descname">getMember</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.getMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.getMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a <code class="xref py py-mod docutils literal notranslate"><span class="pre">Member</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p>:mod`type` : How you are searching for the member, this can be name or id.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the member you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">name</span></code> : The name of the member you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.getGuild">
+<em class="property">async </em><code class="sig-name descname">getGuild</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.getGuild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.getGuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a <code class="xref py py-mod docutils literal notranslate"><span class="pre">Guild</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p>:mod`type` : How you are searching for the guild, this can be name or id.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the guild you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">name</span></code> : The name of the guild you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.get_discord_object">
+<em class="property">async </em><code class="sig-name descname">get_discord_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">target</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.get_discord_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.get_discord_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a variable to a discord object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – The id of the object</p></li>
+<li><p><strong>target</strong> – the type to convert too.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Types:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>discord.Member</p></li>
+<li><p>discord.Role</p></li>
+<li><p>discord.Channel</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.convert_var">
+<em class="property">async </em><code class="sig-name descname">convert_var</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.convert_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.convert_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requires action class with type and index</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.getArgument">
+<em class="property">async </em><code class="sig-name descname">getArgument</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.getArgument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.getArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts an argument to a variable</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> : The name to store the arugment as</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">type</span></code> : The type of variable</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">index</span></code> : The index of the argument</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.getChannel">
+<em class="property">async </em><code class="sig-name descname">getChannel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.getChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.getChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a <code class="xref py py-mod docutils literal notranslate"><span class="pre">Channel</span></code> object</p>
+<dl>
+<dt>Members:</dt><dd><p>:mod`type` : How you are searching for the channel, this can be name or id.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">id</span></code> : The id of the channel you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">name</span></code> : The name of the channel you are looking for.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">print</span></code> : What to print to console when this action is complete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.get_variable">
+<em class="property">async </em><code class="sig-name descname">get_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">target</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.get_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.get_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a variable from self.commandsVar using the key</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.print_function">
+<em class="property">async </em><code class="sig-name descname">print_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.print_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.print_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the message to console</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">message</span></code> The message to print</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some characters can not be displayed in console. its recommended to use id’s of objects if available</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.forLoop">
+<em class="property">async </em><code class="sig-name descname">forLoop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.forLoop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.forLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>For loop</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">type</span></code> The type of for loop</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">for</span> <span class="pre">x</span> <span class="pre">in</span></code></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">stop</span></code></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">start</span></code></p></li>
+</ul>
+</div></blockquote>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">list</span></code> : the list to cycle through, used in for x in</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">stop</span></code> : the end number, used in start and stop</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">start</span></code> : the start number, used in start</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">actions</span></code> : the list of actions to do every iteration</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> : The current iteration of the for loop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.parseMessage">
+<em class="property">async </em><code class="sig-name descname">parseMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.parseMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.parseMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> – the message to parse.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.create_list">
+<em class="property">async </em><code class="sig-name descname">create_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.create_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.create_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an empty list</p>
+<dl class="simple">
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> The name to store the list as</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> is not present nothing will happen</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.append_to_list">
+<em class="property">async </em><code class="sig-name descname">append_to_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.append_to_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.append_to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends to a list</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">value</span></code> The value of the variable</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">target</span></code> the list to append to</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">target</span></code> or <code class="xref py py-mod docutils literal notranslate"><span class="pre">value</span></code> is not present nothing will happen</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.pop_from_list">
+<em class="property">async </em><code class="sig-name descname">pop_from_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.pop_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.pop_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pops from list</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> : the variable to save the value in</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">target</span></code> : the list to pop from</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">index</span></code> : The index to pop</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If either <code class="xref py py-mod docutils literal notranslate"><span class="pre">target</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> or <code class="xref py py-mod docutils literal notranslate"><span class="pre">index</span></code> is not present nothing will happen</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.sendMessage">
+<em class="property">async </em><code class="sig-name descname">sendMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.sendMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.sendMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a message in the channel</p>
+<dl>
+<dt>Members:</dt><dd><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">message</span></code> : .</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">delete_after</span></code> : .</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">channel</span></code> : The channel to send the message.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">channel</span></code> : The channel the command was executed in</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">author</span></code> : The author of the member who executed the channel</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">variable</span></code> : Custom channel</p></li>
+</ul>
+</div></blockquote>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">var</span></code> : Saves the message object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.process_actions_list">
+<em class="property">async </em><code class="sig-name descname">process_actions_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.process_actions_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.process_actions_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proccesses the actions list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="jsonProcessor.cake.processCommands">
+<em class="property">async </em><code class="sig-name descname">processCommands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jsonProcessor.html#cake.processCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jsonProcessor.cake.processCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proccesses the command actions</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Blank
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

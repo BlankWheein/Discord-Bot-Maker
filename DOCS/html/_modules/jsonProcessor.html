@@ -1,0 +1,1075 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jsonProcessor &mdash; Bot Maker now documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Bot Maker
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bot Maker</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>jsonProcessor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jsonProcessor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">discord</span>
+<span class="kn">from</span> <span class="nn">discord.ext</span> <span class="kn">import</span> <span class="n">commands</span>
+<span class="kn">from</span> <span class="nn">discord.utils</span> <span class="kn">import</span> <span class="n">get</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">asyncio</span>
+
+<span class="kn">from</span> <span class="nn">BotMakerExceptions</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="cake"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake">[docs]</a><span class="k">class</span> <span class="nc">cake</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">guild</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This section will explain the actions variables and how they are used.</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`self.channel` : This contexts channel object.</span>
+<span class="sd">            </span>
+<span class="sd">            :class:`self.message` : This contexts message object.</span>
+<span class="sd">            </span>
+<span class="sd">            :class:`self.guild` : This contexts guild object.</span>
+
+<span class="sd">            :class:`self.running` : This controls if the command is running.</span>
+
+<span class="sd">            :class:`self.command` : The command executed.</span>
+
+<span class="sd">            :class:`self.this` : Discord object.</span>
+
+<span class="sd">            :class:`self.client` : Discord Client object.</span>
+
+<span class="sd">            :class:`self.commandsVar` : This contexts variables.</span>
+
+<span class="sd">            :class:`self.commandsArgs` : Not used atm, trying to find out why...</span>
+
+<span class="sd">            :class:`self.args` : Message arguments.</span>
+
+<span class="sd">            :class:`self.events` : Events.</span>
+
+<span class="sd">            :class:`self.callbacks` : Functions available.</span>
+
+<span class="sd">            :class:`self.type_functions` : types.</span>
+
+<span class="sd">            :class:`self.conditions` : Conditions for the if statements.</span>
+
+<span class="sd">            :class:`self.exception` : The exceptions the command can raise.</span>
+
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">this</span> <span class="o">=</span> <span class="n">this</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">guild</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">channel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">message</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">view</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+
+        <span class="k">if</span> <span class="n">guild</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">guild</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">guild</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">channel</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">client</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">command</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;client.user&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="s2">&quot;guild&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="p">,</span>
+                            <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsArgs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;on_ready&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;on_message_delete&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;on_message&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;getRole&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRole</span><span class="p">,</span>  <span class="c1"># Gets a role from name or id in the current guild</span>
+            <span class="s1">&#39;getGuild&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGuild</span><span class="p">,</span>  <span class="c1"># Gets a guild from id or name</span>
+            <span class="s2">&quot;getArgument&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getArgument</span><span class="p">,</span>  <span class="c1"># Get an argument from the message</span>
+            <span class="s1">&#39;getChannel&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getChannel</span><span class="p">,</span>  <span class="c1"># Gets a channel from id or name</span>
+            <span class="s1">&#39;sendMessage&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">,</span>  <span class="c1"># Sends a message to a channel</span>
+            <span class="s1">&#39;setVariable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_var</span><span class="p">,</span>  <span class="c1"># Sets a variable in in self.commandsVar</span>
+            <span class="s2">&quot;ifStatement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">if_statement</span><span class="p">,</span>  <span class="c1"># An if statement</span>
+            <span class="s2">&quot;getMember&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMember</span><span class="p">,</span>  <span class="c1"># Get a member from the current guild</span>
+            <span class="s1">&#39;forLoop&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">forLoop</span><span class="p">,</span>  <span class="c1"># A for loop of stuff</span>
+            <span class="s1">&#39;print&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_function</span><span class="p">,</span>  <span class="c1"># Prints something</span>
+            <span class="s1">&#39;setGuild&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setGuild</span><span class="p">,</span>  <span class="c1"># Sets the current guild</span>
+            <span class="s1">&#39;setChannel&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setChannel</span><span class="p">,</span>  <span class="c1"># Sets the current channel</span>
+            <span class="s1">&#39;setPressence&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">setPressence</span><span class="p">,</span>  <span class="c1"># Sets the presence</span>
+            <span class="s1">&#39;purge&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">purge</span><span class="p">,</span>  <span class="c1"># Deletes x amount of messages in a channel</span>
+            <span class="s1">&#39;withTyping&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">withTyping</span><span class="p">,</span>
+            <span class="c1"># Returns a context manager that allows you to type for an indefinite period of time.</span>
+            <span class="s1">&#39;wait&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">,</span>  <span class="c1"># Waits x amount of seconds</span>
+            <span class="s1">&#39;append_to_list&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_to_list</span><span class="p">,</span>  <span class="c1"># Appends a value to a list</span>
+            <span class="s1">&#39;create_list&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_list</span><span class="p">,</span>  <span class="c1"># Creates a list and stores it in self.commandsVar</span>
+            <span class="s1">&#39;pop_from_list&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop_from_list</span><span class="p">,</span>  <span class="c1"># Pops from a list and saves it as a variable</span>
+            <span class="s1">&#39;try_catch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_catch</span><span class="p">,</span>  <span class="c1"># List of actions inside a try/except</span>
+            <span class="s1">&#39;wait_for&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pin_message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_message</span><span class="p">,</span>
+            <span class="c1"># Pins a message from a variable or a message from id in the current channel</span>
+            <span class="s2">&quot;unpin_message&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpin_message</span><span class="p">,</span>  <span class="c1"># Same as Pin just unpin</span>
+            <span class="s1">&#39;get_message&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message</span><span class="p">,</span>  <span class="c1"># Gets a message from the current channel and saves it in self.commandsVar</span>
+            <span class="s2">&quot;check_for_key_perms&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_for_key_perms</span><span class="p">,</span>
+            <span class="c1"># Checks for specified perms if they have them go in true else go in false Supports or and and</span>
+            <span class="s1">&#39;raise_exception&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_exception</span><span class="p">,</span>  <span class="c1"># Raises an exception (Useful with the try_catch action)</span>
+            <span class="s1">&#39;add_roles&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_roles</span><span class="p">,</span>
+            <span class="c1"># Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log</span>
+            <span class="s1">&#39;remove_roles&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_roles</span><span class="p">,</span>  <span class="c1"># Same as add_roles just removes instead</span>
+            <span class="s1">&#39;set_category&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_category</span><span class="p">,</span>  <span class="c1"># Sets a category as the main category</span>
+            <span class="s1">&#39;exit_command&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_command</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s2">&quot;str&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s1">&#39;dict&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+            <span class="s1">&#39;list&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+            <span class="s1">&#39;tuple&#39;</span><span class="p">:</span> <span class="nb">tuple</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;==&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;&lt;&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;!=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;&gt;&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;&gt;=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;&lt;=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Exception&#39;</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span>
+            <span class="s1">&#39;ValueError&#39;</span><span class="p">:</span> <span class="ne">ValueError</span><span class="p">,</span>
+            <span class="s1">&#39;ArgumentError&#39;</span><span class="p">:</span> <span class="n">ArgumentError</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="cake.exit_command"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.exit_command">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">exit_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This action stops the current command.</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="cake.set_category"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.set_category">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the current category from id</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`id` : The id of the category</span>
+
+<span class="sd">        **this will be removed after the command has been executed**&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="ow">is</span> <span class="n">discord</span><span class="o">.</span><span class="n">CategoryChannel</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">channel</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel</span>
+                    <span class="k">if</span> <span class="s2">&quot;var&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">channel</span></div>
+
+<div class="viewcode-block" id="cake.add_roles"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.add_roles">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a role to the target</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`target` : (str / int / discord.member / author):  The target</span>
+
+<span class="sd">            :class:`roles` : list of roles?</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">author</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;roles&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;roles&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;roles&quot;</span><span class="p">])</span>
+        <span class="k">await</span> <span class="n">target</span><span class="o">.</span><span class="n">add_roles</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.remove_roles"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.remove_roles">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a role to the target</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`target` : (str / int / discord.member / author):  The target</span>
+
+<span class="sd">            :class:`roles` : list of roles?</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">author</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;roles&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;roles&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">roles</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;roles&quot;</span><span class="p">])</span>
+        <span class="k">await</span> <span class="n">target</span><span class="o">.</span><span class="n">remove_roles</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.raise_exception"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.raise_exception">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">raise_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raises an exception</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`exception` : The exception to raise</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;exception&quot;</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="cake.check_for_key_perms"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.check_for_key_perms">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_for_key_perms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Checks if they have perms for a certain action Supports :class:`and` and :class:`or`</span>
+<span class="sd">        </span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`type` : (str): Can be :class:`and` or :class:`or`</span>
+
+<span class="sd">            :class:`perms` : The required permission</span>
+
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">perms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">author</span><span class="o">.</span><span class="n">guild_permissions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">perms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;and&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;perms&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">perm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_perms</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_perms</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;or&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;perms&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_perms</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_perms</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cake.check_perms"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.check_perms">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_perms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">perms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Processes the action list &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">perms</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;false&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.get_message"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.get_message">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a message from id</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :class:`id` :  The id of the message.</span>
+
+<span class="sd">            :class:`var` : The name of the variable to put the message into.</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            This requires :mod:`self.channel` to be set.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">fetch_message</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;var&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">msg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;msg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span></div>
+
+<div class="viewcode-block" id="cake.pin_message"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.pin_message">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">pin_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pins the specified message</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`message` : The message to pin.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This requires :mod:`self.channel` to be set.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">pin</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">fetch_message</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">MsgNotFoundError</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">pin</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="cake.unpin_message"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.unpin_message">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">unpin_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unpins the specified message</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`message` : The message to unpin.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This requires :mod:`self.channel` to be set.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">unpin</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">fetch_message</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+            <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">unpin</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="cake.wait"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.wait">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sleeps for x amount of time</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`delay` : The amount of time to sleep in ms.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;delay&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.try_catch"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.try_catch">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">try_catch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Try catch.</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`actions` : The list of actions to try.</span>
+
+<span class="sd">            :mod:`exception` : The exception.</span>
+
+<span class="sd">            :mod:`errorvar` : Saves the error message in this variable name.</span>
+
+<span class="sd">            :mod:`error` : The list of actions if the exception is raised.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            If :mod:`errorvar` is none, the error message will be saved as `error`.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;exception&quot;</span><span class="p">]]</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;errorvar&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;errorvar&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">error</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.withTyping"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.withTyping">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">withTyping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts a context manager with :mod:`with Typing`.</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`actions` : The list of actions the context manager wraps around</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This requires :mod:`self.channel` to be set.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">ChannelNotSet</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">typing</span><span class="p">():</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.purge"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.purge">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">purge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Purges messages from :mod:`self.channel`</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`limit` : The max amount of messages to delete.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`var` : The amount of messages deleted will be stored in this variable.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This requires :mod:`self.channel` to be set.</span>
+
+<span class="sd">            If :mod:`var` is not set it will not store the variable</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span>
+            <span class="n">limit</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;limit&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+            <span class="n">delete</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">purge</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">delete</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelNotSet</span></div>
+
+<div class="viewcode-block" id="cake.setPressence"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.setPressence">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">setPressence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the bots pressence</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`game` : The message to display.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`status` : The status to show.</span>
+<span class="sd">             </span>
+<span class="sd">             *  :mod:`dnd` : Shows the status **`Do not disturb`**</span>
+<span class="sd">             *  :mod:`idle` : Shows the status **`Idle`**</span>
+<span class="sd">             *  :mod:`offline` : Shows the status **`Invisible`**</span>
+<span class="sd">             *  :mod:`online` : Shows the status **`Online`**</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            If :mod:`status` is &#39;&#39; it will not update the status.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">game</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">Game</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;game&quot;</span><span class="p">]))</span>
+        <span class="n">statuses</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dnd&#39;</span><span class="p">:</span> <span class="n">discord</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">dnd</span><span class="p">,</span>
+            <span class="s1">&#39;idle&#39;</span><span class="p">:</span> <span class="n">discord</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">idle</span><span class="p">,</span>
+            <span class="s1">&#39;offline&#39;</span><span class="p">:</span> <span class="n">discord</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">offline</span><span class="p">,</span>
+            <span class="s1">&#39;online&#39;</span><span class="p">:</span> <span class="n">discord</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">online</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">change_presence</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">statuses</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]],</span> <span class="n">activity</span><span class="o">=</span><span class="n">game</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cake.process_var"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.process_var">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert str to a self.commandsVar variable&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+
+            <span class="n">var</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_functions</span><span class="p">:</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_functions</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="n">var</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">var</span></div>
+
+<div class="viewcode-block" id="cake.set_var"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.set_var">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a variable in self.commandsVar&quot;&quot;&quot;</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_var</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;discord&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_discord_object</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var</span></div>
+
+<div class="viewcode-block" id="cake.if_statement"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.if_statement">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">if_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If statement </span>
+<span class="sd">        </span>
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`var1` : Variable 1.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`var2` : Variable 2.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`operator` : The operator. This can be :mod:`self.conditions`.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`true` : The list of actions if true.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`false` : The list of actions if false.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">var1</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;var1&quot;</span><span class="p">)</span>
+        <span class="n">var2</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;var2&quot;</span><span class="p">)</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;operator&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">[</span><span class="n">operator</span><span class="p">](</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;false&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.setGuild"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.setGuild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">setGuild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the :mod:`self.guild` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`id` : The id of the guild you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            :mod:`self.guild` will be automatically set if there is ctx</span>
+<span class="sd">            </span>
+<span class="sd">            ctx will be set if a command is used in a server.</span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">guild</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_guild</span><span class="p">(</span><span class="n">guild</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;guild&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span>
+        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">[</span><span class="n">attribute</span> <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;guild&quot;</span><span class="p">])</span> <span class="k">if</span>
+                          <span class="ow">not</span> <span class="n">attribute</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;guild.</span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;guild&quot;</span><span class="p">],</span> <span class="n">attribute</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;print&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;print&quot;</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="cake.setChannel"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.setChannel">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">setChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the :mod:`self.channel` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`id` : The id of the channel you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            :mod:`self.channel` will be automatically set if there is ctx</span>
+<span class="sd">            </span>
+<span class="sd">            ctx will be set if a command is used in a server.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="s2">&quot;channel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span>
+        <span class="k">if</span> <span class="s2">&quot;print&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;print&quot;</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="cake.getRole"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.getRole">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getRole</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a :mod:`Role` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod`type` : How you are searching for the role, this can be name or id.</span>
+
+<span class="sd">            :mod:`id` : The id of the role you are looking for.</span>
+
+<span class="sd">            :mod:`name` : The name of the role you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">role</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">roles</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">role</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">RoleIdNotFound</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">role</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">role</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">roles</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">role</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">RoleNameNotFound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">role</span></div>
+
+<div class="viewcode-block" id="cake.getMember"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.getMember">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a :mod:`Member` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod`type` : How you are searching for the member, this can be name or id.</span>
+
+<span class="sd">            :mod:`id` : The id of the member you are looking for.</span>
+
+<span class="sd">            :mod:`name` : The name of the member you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">member</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">MemberIdNotFound</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">member</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">member</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">MemberNameNotFound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">member</span></div>
+
+<div class="viewcode-block" id="cake.getGuild"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.getGuild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getGuild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a :mod:`Guild` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod`type` : How you are searching for the guild, this can be name or id.</span>
+
+<span class="sd">            :mod:`id` : The id of the guild you are looking for.</span>
+
+<span class="sd">            :mod:`name` : The name of the guild you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+            <span class="n">guild</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_guild</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">guild</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">GuildIdNotFound</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild</span>
+
+        <span class="k">elif</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">guild</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">guilds</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">guild</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild</span>
+                    <span class="k">return</span>
+            <span class="k">raise</span> <span class="n">GuildNameNotFound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cake.get_discord_object"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.get_discord_object">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_discord_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a variable to a discord object.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            id : The id of the object</span>
+<span class="sd">            target : the type to convert too. </span>
+
+<span class="sd">        Types:</span>
+
+<span class="sd">            * discord.Member</span>
+
+<span class="sd">            * discord.Role</span>
+
+<span class="sd">            * discord.Channel</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;discord.Member&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_all_members</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;discord.Role&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;discord.Channel&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_all_channels</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cake.convert_var"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.convert_var">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">convert_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Requires action class with type and index&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span> <span class="k">return</span>
+        <span class="k">if</span> <span class="s1">&#39;discord&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]:</span>
+            <span class="n">strings_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">]</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">strings_to_remove</span><span class="p">:</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_discord_object</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_functions</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="cake.getArgument"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.getArgument">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts an argument to a variable</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`var` : The name to store the arugment as</span>
+
+<span class="sd">            :mod:`type` : The type of variable</span>
+
+<span class="sd">            :mod:`index` : The index of the argument</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_var</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cake.getChannel"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.getChannel">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a :mod:`Channel` object</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod`type` : How you are searching for the channel, this can be name or id.</span>
+
+<span class="sd">            :mod:`id` : The id of the channel you are looking for.</span>
+
+<span class="sd">            :mod:`name` : The name of the channel you are looking for.</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`print` : What to print to console when this action is complete</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">ChannelNotFound</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">raise</span> <span class="n">ChannelNotFound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">channel</span></div>
+
+<div class="viewcode-block" id="cake.get_variable"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.get_variable">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets a variable from self.commandsVar using the key&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">:</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">var</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">action</span><span class="p">[</span><span class="n">target</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="cake.print_function"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.print_function">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">print_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints the message to console</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`message` The message to print</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            Some characters can not be displayed in console. its recommended to use id&#39;s of objects if available</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="cake.forLoop"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.forLoop">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">forLoop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For loop</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`type` The type of for loop</span>
+<span class="sd">                </span>
+<span class="sd">                * :mod:`for x in`</span>
+<span class="sd">                </span>
+<span class="sd">                * :mod:`stop`</span>
+
+<span class="sd">                * :mod:`start`</span>
+<span class="sd">            </span>
+<span class="sd">            :mod:`list` : the list to cycle through, used in for x in</span>
+
+<span class="sd">            :mod:`stop` : the end number, used in start and stop</span>
+
+<span class="sd">            :mod:`start` : the start number, used in start</span>
+
+<span class="sd">            :mod:`actions` : the list of actions to do every iteration</span>
+
+<span class="sd">            :mod:`var` : The current iteration of the for loop</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;for x in&quot;</span><span class="p">:</span>
+            <span class="n">variables</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;stop&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">],</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;stop&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_actions_list</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.parseMessage"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.parseMessage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">parseMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a string</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message : the message to parse.</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">[</span><span class="n">attribute</span> <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">variable</span><span class="p">])</span> <span class="k">if</span>
+                              <span class="ow">not</span> <span class="n">attribute</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">stringtoreplace</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">stringtoreplace</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span> <span class="n">attribute</span><span class="p">)),</span> <span class="n">message</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">variable</span><span class="p">]),</span> <span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">message</span></div>
+
+<div class="viewcode-block" id="cake.create_list"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.create_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates an empty list</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`var` The name to store the list as</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            If :mod:`var` is not present nothing will happen</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;var&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="cake.append_to_list"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.append_to_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">append_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends to a list</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`value` The value of the variable</span>
+
+<span class="sd">            :mod:`target` the list to append to</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            If :mod:`target` or :mod:`value` is not present nothing will happen</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;value&quot;</span> <span class="ow">and</span> <span class="s2">&quot;target&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="cake.pop_from_list"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.pop_from_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">pop_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pops from list</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`var` : the variable to save the value in</span>
+
+<span class="sd">            :mod:`target` : the list to pop from</span>
+
+<span class="sd">            :mod:`index` : The index to pop</span>
+<span class="sd">        </span>
+<span class="sd">        .. note::</span>
+<span class="sd">            If either :mod:`target`, :mod:`var` or :mod:`index` is not present nothing will happen</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;target&quot;</span> <span class="ow">and</span> <span class="s2">&quot;var&quot;</span> <span class="ow">and</span> <span class="s2">&quot;index&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+                <span class="n">action</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.sendMessage"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.sendMessage">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">sendMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sends a message in the channel</span>
+
+<span class="sd">        Members:</span>
+<span class="sd">            :mod:`message` : .</span>
+
+<span class="sd">            :mod:`delete_after` : .</span>
+
+<span class="sd">            :mod:`channel` : The channel to send the message.</span>
+<span class="sd">                </span>
+<span class="sd">                * :mod:`channel` : The channel the command was executed in</span>
+
+<span class="sd">                * :mod:`author` : The author of the member who executed the channel</span>
+
+<span class="sd">                * :mod:`variable` : Custom channel</span>
+
+<span class="sd">            :mod:`var` : Saves the message object.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+        <span class="n">delete_after</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;delete_after&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delete_after</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">delete_after</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">delete_after</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;channel&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">newchannel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">newchannel</span><span class="p">:</span>
+                <span class="n">channel</span> <span class="o">=</span> <span class="n">newchannel</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ChannelNotFound</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="ow">and</span> <span class="n">channel</span> <span class="o">==</span> <span class="s2">&quot;channel&quot;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">delete_after</span><span class="o">=</span><span class="n">delete_after</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="ow">and</span> <span class="n">channel</span> <span class="o">==</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">author</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">delete_after</span><span class="o">=</span><span class="n">delete_after</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="o">==</span> <span class="n">discord</span><span class="o">.</span><span class="n">TextChannel</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="k">await</span> <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">delete_after</span><span class="o">=</span><span class="n">delete_after</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelNotFound</span>
+        <span class="k">if</span> <span class="s2">&quot;var&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandsVar</span><span class="p">[</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">msg</span></div>
+
+<div class="viewcode-block" id="cake.process_actions_list"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.process_actions_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_actions_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Proccesses the actions list &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">new_actions</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">new_action</span> <span class="ow">in</span> <span class="n">new_actions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">[</span><span class="n">new_action</span><span class="p">](</span><span class="n">new_actions</span><span class="p">[</span><span class="n">new_action</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="cake.processCommands"><a class="viewcode-back" href="../source/jsonProcessor.html#jsonProcessor.cake.processCommands">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">processCommands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Proccesses the command actions &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">actions</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">[</span><span class="n">action</span><span class="p">](</span><span class="n">actions</span><span class="p">[</span><span class="n">action</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s2">&quot;print&quot;</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">[</span><span class="n">action</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseMessage</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="n">action</span><span class="p">][</span><span class="s2">&quot;print&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Blank
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
