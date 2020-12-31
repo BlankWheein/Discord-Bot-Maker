@@ -1,78 +1,62 @@
 {
-  "on_ready": {
+  "print": {
     "actions": [
       {
+        "setGuild": {
+          "id": "736249300807450665",
+          "print": ""
+        }
+      },
+      {
         "setChannel": {
-          "id": "736592970601594921"
+          "id": "736648548380049541"
         }
       },
       {
-        "setVariable": {
-          "content": "var_content",
-          "type": "str",
-          "var": "var1"
-        }
-      },
-      {
-        "setVariable": {
-          "content": "var_content",
-          "type": "str",
-          "var": "var2"
-        }
-      },
-      {
-        "ifStatement": {
-          "var1": "{var1}",
-          "var2": "{var2}",
-          "operator": "!=",
-          "true": [
-            {
-              "sendMessage": {
-                "message": "Variables are equal",
-                "channel": "channel",
-                "var": "",
-                "delete_after": "20"
-              }
-            },
-            {"print": {
-              "message": "This is True"
-            }}
-          ],
-          "false": [
-            {
-              "sendMessage": {
-                "message": "Variables are different",
-                "channel": "channel",
-                "var": "",
-                "delete_after": "20"
-              }
-            },
-            {"print": {
-              "message": "This is False"
-            }}
-          ]
+        "read_global_variables": {
+          "print": "Reading global variables!"
         }
       },
       {
         "sendMessage": {
-          "message": "If hsa ended",
+          "message": "blank is {test}",
           "channel": "channel",
-          "var": "",
-          "delete_after": "20"
+          "delete_after": null
         }
-      },
-      {"print":{
-        "message":"i am working, i think"
-      }}
+      }
     ]
   },
-  "test": {
+  "add": {
     "actions": [
-      {"sendMessage":{
-        "message": "i am working, i think",
-        "channel": "channel",
-        "delete_after":"20"
-      }}
+      {
+        "setGuild": {
+          "id": "736249300807450665",
+          "print": ""
+        }
+      },
+      {
+        "setChannel": {
+          "id": "736648548380049541"
+        }
+      },
+      {
+        "read_global_variables": {
+          "print": "Reading global variables!"
+        }
+      },
+      {
+        "change_variable_value": {
+          "target": "test",
+          "operator": "increment by 1",
+          "value": ""
+        }
+      },
+      {
+        "write_global_variable": {
+          "key": "test",
+          "value": "{test}"
+        }
+      }
     ]
   }
 }

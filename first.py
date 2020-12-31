@@ -48,6 +48,8 @@ class Main(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.commands = json.load(open("commands.json", "r"))
+        with open("commands.json", "w+") as file:
+            json.dump(self.commands, file, indent=2)
         if "on_ready" in self.commands:
             await self.client.cake(None, "on_ready", self).processCommands()
 

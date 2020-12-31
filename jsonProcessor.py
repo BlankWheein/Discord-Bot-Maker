@@ -120,7 +120,10 @@ class cake:
             # Adds a role from the roles key for the target, which can be set to author. can set the reason which will show up in audit log
             'remove_roles': self.remove_roles,  # Same as add_roles just removes instead
             'set_category': self.set_category,  # Sets a category as the main category
-            'exit_command': self.exit_command
+            'exit_command': self.exit_command, # Exits the command
+            'read_global_variables': self.read_global_variables, # Puts global variables in the local variables
+            'write_global_variable': self.write_global_variable,
+            'change_variable_value': self.change_variable_value
         }
         self.type_functions = {
             'int': int,
@@ -140,10 +143,11 @@ class cake:
         self.exceptions = {
             'Exception': Exception,
             'ValueError': ValueError,
-            'ArgumentError': ArgumentError
+            'ArgumentError': ArgumentError,
+            'ChannelNotFound': ChannelNotFound
         }
 
-    async def exit_command(self, action):
+    async def exit_command(self, action=None):
         """
         This action stops the current command.
 
@@ -153,6 +157,100 @@ class cake:
         """
         self.running = False
 
+    async def write_global_variable(self, action):
+        """
+        Writes to the global variables
+
+        Members:
+            key and value?
+
+        ..note::
+            This requires :mod:`self.guild` to be set
+        """
+        if not self.guild: return
+        data = await self.get_global_variables()
+        data[action["key"]] = await self.get_variable(action, "value")
+        with open(f"bot/global_variables/{self.guild.id}.txt", "w+") as file:
+            json.dump(data, file, indent=2)
+        print(data)
+
+    async def change_variable_value(self, action):
+        """
+        Changes a value
+
+        Members:
+
+            :mod:`target` The target variable (should not be surrounded by {})
+
+            :mod:`operator`:
+
+                * :mod:`increment by 1`
+
+                * :mod:`decrement by 1`
+
+                * :mod:`add`
+
+                * :mod:`subtract`
+
+                * :mod:`times`
+
+                * :mod:`divide`
+
+                * :mod:`set`
+
+            :mod:`value` The value to change with, this depends on the :mod:`operator`
+
+        """
+
+        operator = await self.get_variable(action, "operator")
+        if operator == "increment by 1":
+            self.commandsVar[await self.get_variable(action, "target")] += 1
+        elif operator == "decrement by 1":
+            self.commandsVar[await self.get_variable(action, "target")] -= 1
+        elif operator == "add":
+            self.commandsVar[await self.get_variable(action, "target")] += await self.get_variable(action, "value")
+        elif operator == "subtract":
+            self.commandsVar[await self.get_variable(action, "target")] -= await self.get_variable(action, "value")
+        elif operator == "times":
+            self.commandsVar[await self.get_variable(action, "target")] *= await self.get_variable(action, "value")
+        elif operator == "divide":
+            self.commandsVar[await self.get_variable(action, "target")] /= await self.get_variable(action, "value")
+        elif operator == "set":
+            self.commandsVar[await self.get_variable(action, "target")] = await self.get_variable(action, "value")
+
+
+
+
+
+
+    async def get_global_variables(self):
+        if not self.guild: return
+        try:
+            with open(f"bot/global_variables/{self.guild.id}.txt", "r") as file:
+                pass
+        except FileNotFoundError:
+            with open(f"bot/global_variables/{self.guild.id}.txt", "w+") as file:
+                json.dump({}, file, indent=2)
+        finally:
+            with open(f"bot/global_variables/{self.guild.id}.txt", "r") as file:
+                data = json.load(file)
+        return data
+
+    async def read_global_variables(self, action=None):
+        """
+        Reads the variables in the json file and converts them to local variables.
+
+        Members:
+            None
+
+        ..note::
+            This required :mod:`self.guild` to be set.
+        """
+
+        data = await self.get_global_variables()
+
+        for key in data:
+            self.commandsVar[key] = data[key]
 
     async def set_category(self, action):
         """Sets the current category from id
@@ -176,12 +274,18 @@ class cake:
         Members:
             :class:`target` : (str / int / discord.member / author):  The target
 
-            :class:`roles` : list of roles?
+            :class:`roles` : Role to add (Can only add 1 at a time)
+
+            :class:`reason` : The reason why the role was added.
+
+        .. note::
+            :mod:`reason` can be left empty.
 
         """
 
         if type(action["target"]) is str:
             target = await self.get_variable(action, "target")
+            print(target, "TARGET", self.guild.members, "GUILD")
             if type(target) is int:
                 target = self.guild.get_member(target)
         else:
@@ -194,16 +298,19 @@ class cake:
                 roles = self.guild.get_role(roles)
         else:
             roles = self.guild.get_role(action["roles"])
+        if action["reason"] == "":
+            action["reason"] = "Reason Not Specified"
         await target.add_roles(roles, reason=action["reason"])
 
     async def remove_roles(self, action):
         """
+        793507089577803797
         Removes a role to the target
 
         Members:
             :class:`target` : (str / int / discord.member / author):  The target
 
-            :class:`roles` : list of roles?
+            :class:`roles` : Role to remove (Can only remove 1 at a time)
 
         """
 
@@ -336,7 +443,7 @@ class cake:
             :mod:`delay` : The amount of time to sleep in ms.
 
         """
-        await asyncio.sleep(action["delay"])
+        await asyncio.sleep( await self.get_variable(action, "delay"))
 
     async def try_catch(self, action):
         """
@@ -375,7 +482,6 @@ class cake:
             This requires :mod:`self.channel` to be set.
 
         """
-
 
         if self.channel is None: raise ChannelNotSet(action)
         async with self.channel.typing():
@@ -494,17 +600,16 @@ class cake:
             :mod:`self.guild` will be automatically set if there is ctx
             
             ctx will be set if a command is used in a server.
-
-        
         """
         guild = await self.get_variable(action, "id")
+        print(guild)
         self.guild = self.client.get_guild(guild)
+        print(self.guild)
+
         self.commandsVar["guild"] = self.guild
         for attribute in [attribute for attribute in dir(self.commandsVar["guild"]) if
                           not attribute.startswith('__')]:
             self.commandsVar[f"guild.{attribute}"] = getattr(self.commandsVar["guild"], attribute)
-        if "print" in action:
-            print(await self.parseMessage(action["print"]))
 
     async def setChannel(self, action):
         """
@@ -524,15 +629,13 @@ class cake:
         channel = await self.get_variable(action, "id")
         self.channel = self.client.get_channel(channel)
         self.commandsVar["channel"] = self.channel
-        if "print" in action:
-            print(await self.parseMessage(action["print"]))
 
     async def getRole(self, action):
         """
         Gets a :mod:`Role` object
 
         Members:
-            :mod`type` : How you are searching for the role, this can be name or id.
+            :mod:`type` : How you are searching for the role, this can be name or id.
 
             :mod:`id` : The id of the role you are looking for.
 
@@ -543,12 +646,12 @@ class cake:
         """
 
         if action["type"] == 'id':
-            id = await self.get_variable(action, "value")
+            id = await self.get_variable(action, "id")
             role = get(self.guild.roles, id=id)
             if role is None: raise RoleIdNotFound(id)
             self.commandsVar[action["var"]] = role
         elif action["type"] == 'name':
-            name = await self.get_variable(action, "value")
+            name = await self.get_variable(action, "name")
             role = get(self.guild.roles, name=name)
             if role is None: raise RoleNameNotFound(name)
             self.commandsVar[action["var"]] = role
@@ -636,8 +739,10 @@ class cake:
         """Requires action class with type and index"""
         if not self.args: return
         if 'discord' in action["type"]:
-            strings_to_remove = ["@", "#", "<", ">", "&"]
-            id = self.args[action["index"]]
+            strings_to_remove = ["@", "#", "<", ">", "&", "!"]
+            print(action["index"])
+            id = self.args[await self.get_variable(action, "index")]
+
             for x in strings_to_remove:
                 id = re.sub(x, "", id)
             id = int(id)
@@ -740,11 +845,11 @@ class cake:
                 self.commandsVar[action["var"]] = var
                 await self.process_actions_list(action["actions"])
         elif action["type"] == "stop":
-            for var in range(action["stop"]):
+            for var in range(await self.get_variable(action, "stop")):
                 self.commandsVar[action["var"]] = var
                 await self.process_actions_list(action["actions"])
         elif action["type"] == "start":
-            for var in range(action["start"], action["stop"]):
+            for var in range(await self.get_variable(action, "start"), await self.get_variable(action, "stop")):
                 self.commandsVar[action["var"]] = var
                 await self.process_actions_list(action["actions"])
 
@@ -869,12 +974,18 @@ class cake:
             for new_action in new_actions:
                 if self.running:
                     await self.callbacks[new_action](new_actions[new_action])
+                    if "print" in new_actions[new_action]:
+                        print(await self.parseMessage(new_actions[new_action]["print"]))
 
     async def processCommands(self):
         """ Proccesses the command actions """
         for actions in self.command["actions"]:
             for action in actions:
-                if self.running: await self.callbacks[action](actions[action])
-                if "print" in actions[action]:
-                    print(await self.parseMessage(actions[action]["print"]))
+                try:
+                    if self.running: await self.callbacks[action](actions[action])
+                    if "print" in actions[action]:
+                        print(await self.parseMessage(actions[action]["print"]))
+                except Exception as error:
+                    print(action, error)
+                    raise error
         return self
