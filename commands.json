@@ -1,5 +1,5 @@
 {
-  "print": {
+  "d": {
     "actions": [
       {
         "setGuild": {
@@ -9,52 +9,53 @@
       },
       {
         "setChannel": {
-          "id": "736648548380049541"
-        }
-      },
-      {
-        "read_global_variables": {
-          "print": "Reading global variables!"
-        }
-      },
-      {
-        "sendMessage": {
-          "message": "blank is {test}",
-          "channel": "channel",
-          "delete_after": null
-        }
-      }
-    ]
-  },
-  "add": {
-    "actions": [
-      {
-        "setGuild": {
-          "id": "736249300807450665",
+          "id": "736648548380049541",
           "print": ""
         }
       },
       {
-        "setChannel": {
-          "id": "736648548380049541"
+        "read_global_variables": {
+          "print": ""
         }
       },
       {
-        "read_global_variables": {
-          "print": "Reading global variables!"
+        "getArgument": {
+          "index": "0",
+          "type": "str",
+          "var": "arg1",
+          "print": ""
+        }
+      },
+      {
+        "setVariable": {
+          "content": "{arg1}",
+          "type": "str",
+          "var": "argval",
+          "print": ""
         }
       },
       {
         "change_variable_value": {
-          "target": "test",
-          "operator": "increment by 1",
-          "value": ""
+          "target": "{argval}",
+          "operator": "add",
+          "value": "5",
+          "print": ""
         }
       },
       {
         "write_global_variable": {
-          "key": "test",
-          "value": "{test}"
+          "key": "{arg1}",
+          "value": "{argval}",
+          "print": ""
+        }
+      },
+      {
+        "sendMessage": {
+          "message": "Daily collected! you now have {argval} gold",
+          "channel": "channel",
+          "var": "var",
+          "delete_after": "0",
+          "print": ""
         }
       }
     ]

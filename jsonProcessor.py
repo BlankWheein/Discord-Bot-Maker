@@ -50,12 +50,14 @@ class cake:
         self.this = this
         self.message = None
         self.guild = None
+        self.author = None
         self.channel = None
         if ctx is not None:
             self.guild = ctx.guild
             self.channel = ctx.channel
             self.message = ctx.message
             self.view = ctx.view
+            self.author = ctx.message.author
             self.ctx = ctx
 
         if guild is not None:
@@ -162,14 +164,16 @@ class cake:
         Writes to the global variables
 
         Members:
-            key and value?
+            :mod:`key`
+
+            :mod:`value`
 
         ..note::
             This requires :mod:`self.guild` to be set
         """
         if not self.guild: return
         data = await self.get_global_variables()
-        data[action["key"]] = await self.get_variable(action, "value")
+        data[str(await self.get_variable(action, "key"))] = await self.get_variable(action, "value")
         with open(f"bot/global_variables/{self.guild.id}.txt", "w+") as file:
             json.dump(data, file, indent=2)
         print(data)
@@ -202,13 +206,18 @@ class cake:
 
         """
 
+        try:
+            self.commandsVar[await self.get_variable(action, "target")]
+        except KeyError:
+            self.commandsVar[await self.get_variable(action, "target")] = 0
+
         operator = await self.get_variable(action, "operator")
         if operator == "increment by 1":
             self.commandsVar[await self.get_variable(action, "target")] += 1
         elif operator == "decrement by 1":
             self.commandsVar[await self.get_variable(action, "target")] -= 1
         elif operator == "add":
-            self.commandsVar[await self.get_variable(action, "target")] += await self.get_variable(action, "value")
+            self.commandsVar[str(await self.get_variable(action, "target"))] += await self.get_variable(action, "value")
         elif operator == "subtract":
             self.commandsVar[await self.get_variable(action, "target")] -= await self.get_variable(action, "value")
         elif operator == "times":
@@ -217,6 +226,7 @@ class cake:
             self.commandsVar[await self.get_variable(action, "target")] /= await self.get_variable(action, "value")
         elif operator == "set":
             self.commandsVar[await self.get_variable(action, "target")] = await self.get_variable(action, "value")
+        pass
 
 
 
@@ -561,7 +571,8 @@ class cake:
         var = await self.process_var(action, "content")
         if "discord" in action["type"]:
             var = await self.get_discord_object(var, action["type"])
-        self.commandsVar[action["var"]] = var
+        self.commandsVar[str(action["var"])] = var
+        pass
 
     async def if_statement(self, action):
         """
@@ -748,7 +759,7 @@ class cake:
             id = int(id)
             return await self.get_discord_object(id, action["type"])
         else:
-            return self.type_functions[action["type"]](self.args[action["index"]])
+            return self.type_functions[action["type"]](self.args[int(action["index"])])
 
     async def getArgument(self, action):
         """
@@ -862,6 +873,7 @@ class cake:
         
         
         """
+        print("Parsing message '", message, "'")
         for variable in self.commandsVar:
             for attribute in [attribute for attribute in dir(self.commandsVar[variable]) if
                               not attribute.startswith('__')]:
@@ -871,7 +883,10 @@ class cake:
                 except Exception:
                     pass
         for variable in self.commandsVar:
-            message = re.sub(f"{{{variable}}}", str(self.commandsVar[variable]), message)
+            try:
+                message = re.sub(f"{{{variable}}}", str(self.commandsVar[variable]), message)
+            except Exception:
+                pass
         return message
 
     async def create_list(self, action):
@@ -947,6 +962,7 @@ class cake:
         """
 
         msg = None
+        print(action["message"])
         message = await self.parseMessage(action["message"])
         delete_after = await self.get_variable(action, "delete_after")
         if delete_after == 0 or delete_after == '': delete_after = None
@@ -983,8 +999,6 @@ class cake:
             for action in actions:
                 try:
                     if self.running: await self.callbacks[action](actions[action])
-                    if "print" in actions[action]:
-                        print(await self.parseMessage(actions[action]["print"]))
                 except Exception as error:
                     print(action, error)
                     raise error
