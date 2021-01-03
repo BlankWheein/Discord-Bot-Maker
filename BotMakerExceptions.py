@@ -42,3 +42,15 @@ class MemberIdNotFound(ValueError):
 
 class MsgNotFoundError(ValueError):
     pass
+
+
+class MemberNotFound(ValueError):
+    pass
+
+
+class GuildNotFound(ValueError):
+    pass
+
+
+class Cooldown(ValueError):
+    pass

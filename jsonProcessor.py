@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import json
-import logging, sys, re, time, asyncio
+import logging, sys, re, time, asyncio, os
 
 from BotMakerExceptions import *
 
@@ -46,10 +46,12 @@ class cake:
 
 
         """
+        self.dir = None
         self.running = True
         self.this = this
         self.message = None
         self.guild = None
+        self.member_vars = []
         self.author = None
         self.channel = None
         if ctx is not None:
@@ -74,7 +76,12 @@ class cake:
         self.command = self.this.commands[command]
         self.commandsVar = {"client.user": self.this.client.user,
                             "message": self.message, "guild": self.guild,
+                            "author": self.author,
                             "channel": self.channel, "time": time.time()}
+        try:
+            self.commandsVar["author.id"] = self.author.id
+        except Exception:
+            pass
         self.commandsArgs = {}
         try:
             self.args = str(ctx.message.content).split(" ")
@@ -125,7 +132,12 @@ class cake:
             'exit_command': self.exit_command, # Exits the command
             'read_global_variables': self.read_global_variables, # Puts global variables in the local variables
             'write_global_variable': self.write_global_variable,
-            'change_variable_value': self.change_variable_value
+            'change_variable_value': self.change_variable_value,
+
+            'read_member_file': self.read_member_file,
+            'write_member_file': self.write_member_file,
+            'add_member_var': self.add_member_var,
+            'cooldown':self.cooldown
         }
         self.type_functions = {
             'int': int,
@@ -149,6 +161,8 @@ class cake:
             'ChannelNotFound': ChannelNotFound
         }
 
+    async def read_user_variables(self, action=None):
+        pass
     async def exit_command(self, action=None):
         """
         This action stops the current command.
@@ -158,6 +172,121 @@ class cake:
 
         """
         self.running = False
+
+
+    async def create_guild_files(self, action=None):
+        dirs = [f'vars/guilds/{self.guild.id}/members']
+        cooldowns = f'vars/guilds/{self.guild.id}/cooldowns.txt'
+        for dirName in dirs:
+            try:
+                os.makedirs(dirName)
+                print("Directory ", dirName, " Created ")
+            except FileExistsError:
+                print("Directory ", dirName, " already exists")
+
+        try:
+            with open(cooldowns, "r") as file:
+                pass
+        except FileNotFoundError:
+            with open(cooldowns, "w+") as file:
+                json.dump({}, file, indent=2)
+        finally:
+            with open(cooldowns, "r") as file:
+                data = json.load(file)
+            if self.command["name"] not in data:
+                data[self.command["name"]] = {}
+            with open(cooldowns, "w+") as file:
+                json.dump(data, file, indent=2)
+
+    async def create_member_files(self, action=None):
+        dirs = [f'vars/guilds/{self.guild.id}/members/{self.author.id}.txt']
+        for dir in dirs:
+            try:
+                with open(dir, "r") as file:
+                    pass
+            except FileNotFoundError:
+                print(f"Creating file: {dir}")
+                with open(dir, "w+") as file:
+                    json.dump({}, file, indent=2)
+
+    async def read_member_file(self, action=None):
+
+        if not self.author:
+            return print("Author not defined")
+        await self.create_member_files()
+        with open(f'vars/guilds/{self.guild.id}/members/{self.author.id}.txt', "r") as file:
+            data = json.load(file)
+        for var in data:
+            self.commandsVar[var] = data[var]
+            self.member_vars.append(var)
+        return data
+
+    async def cooldown(self, action):
+        """
+        Cooldown
+
+        Members:
+            :mod:`cooldown` The cooldown in seconds
+
+            :mod:`error` The value of the cooldown left
+        """
+        if not self.guild: raise GuildNotFound
+        if not self.author: raise MemberNotFound
+
+        cooldowns_path = f'vars/guilds/{self.guild.id}/cooldowns.txt'
+
+        await self.create_guild_files()
+        seconds = await self.get_variable(action, "cooldown")
+        with open(cooldowns_path, "r") as file:
+            data = json.load(file)
+
+        if str(self.author.id) in data[self.command["name"]]:
+            if data[self.command["name"]][str(self.author.id)] + seconds > time.time():
+                timeleft = data[self.command['name']][str(self.author.id)] + seconds - time.time()
+                self.commandsVar[await self.get_variable(action, "error")] = f"Still on cooldown for {int(timeleft)}"
+                raise Cooldown({int(timeleft)})
+            else:
+                data[self.command["name"]][str(self.author.id)] = time.time()
+        else:
+            data[self.command["name"]][str(self.author.id)] = time.time()
+
+        with open(cooldowns_path, "w+") as file:
+            json.dump(data, file, indent=2)
+
+
+
+
+
+
+    async def write_member_file(self, action=None):
+        if not self.author:
+            return print("Author not found")
+
+        data = {}
+        for x in self.member_vars:
+            data[x] = self.commandsVar[x]
+        with open(f'vars/guilds/{self.guild.id}/members/{self.author.id}.txt', "w+") as file:
+            json.dump(data, file, indent=2)
+    async def add_member_var(self, action):
+        """
+        Adds a variable to a member
+
+        Members:
+            :mod:`key` The name of the variable
+
+            :mod:`value` The default value of the variable
+
+        ..note::
+            This can also be used to reset a member
+
+        """
+        self.member_vars.append(await self.get_variable(action, "key"))
+        self.commandsVar[await self.get_variable(action, "key")] = await self.get_variable(action, "value")
+
+
+
+
+
 
     async def write_global_variable(self, action):
         """
@@ -172,9 +301,10 @@ class cake:
             This requires :mod:`self.guild` to be set
         """
         if not self.guild: return
+        await self.create_guild_files()
         data = await self.get_global_variables()
         data[str(await self.get_variable(action, "key"))] = await self.get_variable(action, "value")
-        with open(f"bot/global_variables/{self.guild.id}.txt", "w+") as file:
+        with open(f"vars/guilds/{self.guild.id}/global.txt", "w+") as file:
             json.dump(data, file, indent=2)
         print(data)
 
@@ -217,7 +347,7 @@ class cake:
         elif operator == "decrement by 1":
             self.commandsVar[await self.get_variable(action, "target")] -= 1
         elif operator == "add":
-            self.commandsVar[str(await self.get_variable(action, "target"))] += await self.get_variable(action, "value")
+            self.commandsVar[await self.get_variable(action, "target")] += await self.get_variable(action, "value")
         elif operator == "subtract":
             self.commandsVar[await self.get_variable(action, "target")] -= await self.get_variable(action, "value")
         elif operator == "times":
@@ -235,14 +365,17 @@ class cake:
 
     async def get_global_variables(self):
         if not self.guild: return
+        await self.create_guild_files()
+        self.global_var = f"vars/guilds/{self.guild.id}/global.txt"
         try:
-            with open(f"bot/global_variables/{self.guild.id}.txt", "r") as file:
+            print("Trying")
+            with open(self.global_var, "r") as file:
                 pass
         except FileNotFoundError:
-            with open(f"bot/global_variables/{self.guild.id}.txt", "w+") as file:
+            with open(self.global_var, "w+") as file:
                 json.dump({}, file, indent=2)
         finally:
-            with open(f"bot/global_variables/{self.guild.id}.txt", "r") as file:
+            with open(self.global_var, "r") as file:
                 data = json.load(file)
         return data
 
@@ -256,8 +389,9 @@ class cake:
         ..note::
             This required :mod:`self.guild` to be set.
         """
-
+        await self.create_guild_files()
         data = await self.get_global_variables()
+
 
         for key in data:
             self.commandsVar[key] = data[key]
@@ -301,7 +435,7 @@ class cake:
         else:
             target = self.guild.get_member(action["target"])
         if action["target"] == "author":
-            target = self.message.author
+            target = self.author
         if type(action["roles"]) is str:
             roles = await self.get_variable(action, "roles")
             if type(roles) is int:
@@ -314,7 +448,6 @@ class cake:
 
     async def remove_roles(self, action):
         """
-        793507089577803797
         Removes a role to the target
 
         Members:
@@ -571,7 +704,7 @@ class cake:
         var = await self.process_var(action, "content")
         if "discord" in action["type"]:
             var = await self.get_discord_object(var, action["type"])
-        self.commandsVar[str(action["var"])] = var
+        self.commandsVar[await self.get_variable(action, "var")] = var
         pass
 
     async def if_statement(self, action):
@@ -990,6 +1123,7 @@ class cake:
             for new_action in new_actions:
                 if self.running:
                     await self.callbacks[new_action](new_actions[new_action])
+                    print(action)
                     if "print" in new_actions[new_action]:
                         print(await self.parseMessage(new_actions[new_action]["print"]))
 
@@ -999,6 +1133,7 @@ class cake:
             for action in actions:
                 try:
                     if self.running: await self.callbacks[action](actions[action])
+                    print(action)
                 except Exception as error:
                     print(action, error)
                     raise error

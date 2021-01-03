@@ -1,61 +1,133 @@
 {
-  "d": {
+  "daily": {
+    "name": "daily",
     "actions": [
       {
-        "setGuild": {
-          "id": "736249300807450665",
+        "try_catch": {
+          "exception": "Exception",
+          "errorvar": "ErrorVar",
+          "actions": [
+            {
+              "cooldown": {
+                "cooldown": "30",
+                "error": "something",
+                "print": ""
+              }
+            },
+            {
+              "add_member_var": {
+                "key": "money",
+                "value": "0",
+                "print": ""
+              }
+            },
+            {
+              "read_member_file": {
+                "print": ""
+              }
+            },
+            {
+              "change_variable_value": {
+                "target": "money",
+                "operator": "add",
+                "value": "5",
+                "print": ""
+              }
+            },
+            {
+              "write_member_file": {
+                "print": ""
+              }
+            },
+            {
+              "sendMessage": {
+                "message": "{author.mention}, You now have {money} monetos! :)",
+                "channel": "channel",
+                "var": "var",
+                "delete_after": null,
+                "print": ""
+              }
+            }
+          ],
+          "error": [
+            {
+              "sendMessage": {
+                "message": "{author.mention}, Please wait {something} seconds before using this command",
+                "channel": "channel",
+                "var": "var",
+                "delete_after": null,
+                "print": ""
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "role": {
+    "name": "role",
+    "actions": [
+      {
+        "add_member_var": {
+          "key": "money",
+          "value": "0",
           "print": ""
         }
       },
       {
-        "setChannel": {
-          "id": "736648548380049541",
+        "read_member_file": {
           "print": ""
         }
       },
       {
-        "read_global_variables": {
-          "print": ""
-        }
-      },
-      {
-        "getArgument": {
-          "index": "0",
-          "type": "str",
-          "var": "arg1",
-          "print": ""
-        }
-      },
-      {
-        "setVariable": {
-          "content": "{arg1}",
-          "type": "str",
-          "var": "argval",
-          "print": ""
-        }
-      },
-      {
-        "change_variable_value": {
-          "target": "{argval}",
-          "operator": "add",
-          "value": "5",
-          "print": ""
-        }
-      },
-      {
-        "write_global_variable": {
-          "key": "{arg1}",
-          "value": "{argval}",
-          "print": ""
-        }
-      },
-      {
-        "sendMessage": {
-          "message": "Daily collected! you now have {argval} gold",
-          "channel": "channel",
-          "var": "var",
-          "delete_after": "0",
-          "print": ""
+        "ifStatement": {
+          "var1": "{money}",
+          "var2": "50",
+          "operator": ">=",
+          "print": "",
+          "true": [
+            {
+              "add_roles": {
+                "target": "author",
+                "roles": "793507089577803797",
+                "reason": "Paid",
+                "print": ""
+              }
+            },
+            {
+              "change_variable_value": {
+                "target": "money",
+                "operator": "subtract",
+                "value": "50",
+                "print": ""
+              }
+            },
+            {
+              "write_member_file": {
+                "print": ""
+              }
+            },
+            {
+              "sendMessage": {
+                "message": "{author.mention} paid for a spicy role! new balance is {money}",
+                "channel": "channel",
+                "var": "var",
+                "delete_after": null,
+                "print": ""
+              }
+            }
+          ],
+          "false": [
+            {
+              "sendMessage": {
+                "message": "{author.mention}, You need atleast 50 monetos to get this role...\nYou have {money}",
+                "channel": "channel",
+                "var": "var",
+                "delete_after": null,
+                "print": ""
+              }
+            }
+          ]
         }
       }
     ]
