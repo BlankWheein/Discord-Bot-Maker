@@ -137,7 +137,7 @@ class cake:
             'read_member_file': self.read_member_file,
             'write_member_file': self.write_member_file,
             'add_member_var': self.add_member_var,
-            'cooldown':self.cooldown
+            'cooldown': self.cooldown
         }
         self.type_functions = {
             'int': int,
@@ -229,26 +229,36 @@ class cake:
             :mod:`cooldown` The cooldown in seconds
 
             :mod:`error` The value of the cooldown left
+
+            :mod:`buckettype` The type of cooldown
         """
         if not self.guild: raise GuildNotFound
         if not self.author: raise MemberNotFound
+        if not self.channel: raise ChannelNotFound
 
         cooldowns_path = f'vars/guilds/{self.guild.id}/cooldowns.txt'
+        keys = {
+            "channel": str(self.channel.id),
+            "member": str(self.author.id),
+            "guild": str(self.guild.id)
+        }
+
+        key = keys[action["buckettype"]]
 
         await self.create_guild_files()
         seconds = await self.get_variable(action, "cooldown")
         with open(cooldowns_path, "r") as file:
             data = json.load(file)
 
-        if str(self.author.id) in data[self.command["name"]]:
-            if data[self.command["name"]][str(self.author.id)] + seconds > time.time():
-                timeleft = data[self.command['name']][str(self.author.id)] + seconds - time.time()
+        if key in data[self.command["name"]]:
+            if data[self.command["name"]][key] + seconds > time.time():
+                timeleft = data[self.command['name']][key] + seconds - time.time()
                 self.commandsVar[await self.get_variable(action, "error")] = f"Still on cooldown for {int(timeleft)}"
                 raise Cooldown({int(timeleft)})
             else:
-                data[self.command["name"]][str(self.author.id)] = time.time()
+                data[self.command["name"]][key] = time.time()
         else:
-            data[self.command["name"]][str(self.author.id)] = time.time()
+            data[self.command["name"]][key] = time.time()
 
         with open(cooldowns_path, "w+") as file:
             json.dump(data, file, indent=2)

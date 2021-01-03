@@ -10,6 +10,7 @@
             {
               "cooldown": {
                 "cooldown": "30",
+                "buckettype": "channel",
                 "error": "something",
                 "print": ""
               }
