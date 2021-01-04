@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-import json
+import json, random
 import logging, sys, re, time, asyncio, os
 
 from BotMakerExceptions import *
@@ -133,11 +133,13 @@ class cake:
             'read_global_variables': self.read_global_variables, # Puts global variables in the local variables
             'write_global_variable': self.write_global_variable,
             'change_variable_value': self.change_variable_value,
-
             'read_member_file': self.read_member_file,
             'write_member_file': self.write_member_file,
             'add_member_var': self.add_member_var,
-            'cooldown': self.cooldown
+            'cooldown': self.cooldown,
+            'random': self.rand,
+            'ifndef': self.ifndef
+
         }
         self.type_functions = {
             'int': int,
@@ -220,6 +222,42 @@ class cake:
             self.commandsVar[var] = data[var]
             self.member_vars.append(var)
         return data
+
+    async def ifndef(self, action):
+        """
+        Checks if a variable is defined.
+
+        Members:
+            :mod:`key` The key to check
+
+            :mod:`true` The actions if it is NOT defined
+
+            :mod:`false` The actions if it is defined
+        """
+        if action["key"] not in self.commandsVar:
+            await self.process_actions_list(action["true"])
+        else:
+            await self.process_actions_list(action["false"])
+
+    async def rand(self, action):
+        """
+        Members:
+            :mod:`min`
+
+            :mod:`max`
+
+            :mod:`type` int or float
+        """
+        min, max = await self.get_variable(action, "min"), await self.get_variable(action, "max")
+        val = None
+        if action["type"] == "int":
+            val = random.randint(int(min), int(max))
+        elif action["type"] == "float":
+            val = random.uniform(float(min), float(max))
+
+        self.commandsVar[action["key"]] = val
+
+
 
     async def cooldown(self, action):
         """

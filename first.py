@@ -32,15 +32,15 @@ class Main(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.logger = init_logger()
+        self.commands = None
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        message = message
         self.commands = json.load(open("commands.json", "r"))
         if message.author.id == self.client.user.id: return
         ctx = await self.client.get_context(message)
         for x in self.commands:
-            if str(message.content).split(" ")[0] == x:
+            if str(message.content).split(" ")[0] == x or x == "on_message":
                 cake = self.client.cake(ctx, x, self)
                 if str(message.content).split(" ")[0] not in cake.events:
                     await cake.processCommands()

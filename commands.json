@@ -1,83 +1,25 @@
 {
-  "daily": {
-    "name": "daily",
+  "role": {
+    "name": "role",
     "actions": [
       {
-        "try_catch": {
-          "exception": "Exception",
-          "errorvar": "ErrorVar",
-          "actions": [
-            {
-              "cooldown": {
-                "cooldown": "30",
-                "buckettype": "channel",
-                "error": "something",
-                "print": ""
-              }
-            },
+        "read_member_file": {
+          "print": ""
+        }
+      },
+      {
+        "ifndef": {
+          "key": "money",
+          "true": [
             {
               "add_member_var": {
                 "key": "money",
                 "value": "0",
                 "print": ""
               }
-            },
-            {
-              "read_member_file": {
-                "print": ""
-              }
-            },
-            {
-              "change_variable_value": {
-                "target": "money",
-                "operator": "add",
-                "value": "5",
-                "print": ""
-              }
-            },
-            {
-              "write_member_file": {
-                "print": ""
-              }
-            },
-            {
-              "sendMessage": {
-                "message": "{author.mention}, You now have {money} monetos! :)",
-                "channel": "channel",
-                "var": "var",
-                "delete_after": null,
-                "print": ""
-              }
             }
           ],
-          "error": [
-            {
-              "sendMessage": {
-                "message": "{author.mention}, Please wait {something} seconds before using this command",
-                "channel": "channel",
-                "var": "var",
-                "delete_after": null,
-                "print": ""
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "role": {
-    "name": "role",
-    "actions": [
-      {
-        "add_member_var": {
-          "key": "money",
-          "value": "0",
-          "print": ""
-        }
-      },
-      {
-        "read_member_file": {
-          "print": ""
+          "false": []
         }
       },
       {
@@ -121,7 +63,7 @@
           "false": [
             {
               "sendMessage": {
-                "message": "{author.mention}, You need atleast 50 monetos to get this role...\nYou have {money}",
+                "message": "{author.mention}, You need atleast 50 monetos to get this role...\\nYou have {money}",
                 "channel": "channel",
                 "var": "var",
                 "delete_after": null,
@@ -129,6 +71,94 @@
               }
             }
           ]
+        }
+      }
+    ]
+  },
+  "daily": {
+    "name": "daily",
+    "actions": [
+      {
+        "try_catch": {
+          "exception": "Exception",
+          "errorvar": "ErrorVar",
+          "actions": [
+            {
+              "cooldown": {
+                "cooldown": "30",
+                "buckettype": "member",
+                "error": "something",
+                "print": ""
+              }
+            }
+          ],
+          "error": [
+            {
+              "sendMessage": {
+                "message": "{author.mention}, Please wait {something} seconds before using this command",
+                "channel": "channel",
+                "var": "var",
+                "delete_after": null,
+                "print": ""
+              }
+            },
+            {
+              "exit_command": {
+                "print": ""
+              }
+            }
+          ]
+        }
+      },
+      {
+        "read_member_file": {
+          "print": ""
+        }
+      },
+      {
+        "ifndef": {
+          "key": "money",
+          "true": [
+            {
+              "add_member_var": {
+                "key": "money",
+                "value": "0",
+                "print": ""
+              }
+            }
+          ],
+          "false": []
+        }
+      },
+      {
+        "random": {
+          "min": "1",
+          "max": "10",
+          "key": "val",
+          "type": "int",
+          "print": ""
+        }
+      },
+      {
+        "change_variable_value": {
+          "target": "money",
+          "operator": "add",
+          "value": "{val}",
+          "print": ""
+        }
+      },
+      {
+        "write_member_file": {
+          "print": ""
+        }
+      },
+      {
+        "sendMessage": {
+          "message": "{author.mention}, You now have {money} monetos! :)",
+          "channel": "channel",
+          "var": "var",
+          "delete_after": null,
+          "print": ""
         }
       }
     ]
