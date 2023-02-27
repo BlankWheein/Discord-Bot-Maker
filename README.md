@@ -1,3 +1,9 @@
+### This repository is currently deprecated a new version is in the works [here](https://github.com/BlankWheein/Discord-Bot-Maker-2.0)
+
+
+
+
+
 ### Discord bot maker, to be used in conjunction with the discord bot maker website [repository](https://github.com/BlankWheein/Discord-Bot-Maker-Webpage)
 
 ## Possible commands using the discord bot maker:
